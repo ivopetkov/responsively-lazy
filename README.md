@@ -26,7 +26,7 @@ The things to customize are the **padding-bottom** style, and the values of the 
 
 ## Browser support
 
-The lazy loading works in browsers supporting the srcset attribute. As of August 2015 that's [62.78%](http://caniuse.com/#feat=srcset).
+The lazy loading works in browsers supporting the srcset attribute. As of August 2015 that's [62.78%](http://caniuse.com/#feat=srcset). Unsupported browsers will load the image in the src attribute.
 
 ## Got questions?
 You can find me at [@IvoPetkovCom](https://twitter.com/IvoPetkovCom) or [ivopetkov.com](http://ivopetkov.com)
