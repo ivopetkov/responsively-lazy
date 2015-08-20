@@ -24,5 +24,9 @@ You can find a demo at [http://ivopetkov.github.io/responsivelyLazy/](http://ivo
 ```
 The things to customize are the **padding-bottom** style, and the values of the **src** and **data-srcset** attributes.
 
+## Browser support
+
+The lazy loading works in browsers supporting the srcset attribute. As of August 2015 that's [62.78%](http://caniuse.com/#feat=srcset).
+
 ## Got questions?
 You can find me at [@IvoPetkovCom](https://twitter.com/IvoPetkovCom) or [ivopetkov.com](http://ivopetkov.com)
