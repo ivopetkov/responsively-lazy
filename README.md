@@ -23,3 +23,6 @@ You can find a demo at [http://ivopetkov.github.io/responsivelyLazy/](http://ivo
 </div>
 ```
 The things to customize are the **padding-bottom** style, and the values of the **src** and **data-srcset** attributes.
+
+## Got questions?
+You can find me at [@IvoPetkovCom](https://twitter.com/IvoPetkovCom) or [ivopetkov.com](http://ivopetkov.com)
