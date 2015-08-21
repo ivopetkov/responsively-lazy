@@ -20,7 +20,7 @@ npm install responsively-lazy
 bower install responsively-lazy
 ```
 
-## How to use
+## Usage
 
 * Include the css file in the head tag
 ```

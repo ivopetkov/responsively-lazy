@@ -11,10 +11,10 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://git@github.com/ivopetkov/responsively-lazy.git"
+        "url": "https://github.com/ivopetkov/responsively-lazy"
     },
     "bugs": {
-        "url": "http://github.com/ivopetkov/responsively-lazy/issues"
+        "url": "https://github.com/ivopetkov/responsively-lazy/issues"
     },
     "keywords": [
         "images",
