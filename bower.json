@@ -1,17 +1,17 @@
 {
     "name": "responsively-lazy",
-    "title": "responsivelyLazy - Lazy load responsive images",
-    "version": "1.0.0",
     "description": "The best lazy loading implementation available. It's the best because it's responsive, truly lazy (absolutely no unnecessary requests) and SEO friendly.",
     "homepage": "http://ivopetkov.com/b/lazy-load-responsive-images/",
-    "author": {
-        "name": "Ivo Petkov",
-        "email": "ivo@ivopetkov.com",
-        "url": "http://ivopetkov.com/"
-    },
+    "authors": [
+        {
+            "name": "Ivo Petkov",
+            "email": "ivo@ivopetkov.com",
+            "homepage": "http://ivopetkov.com/"
+        }
+    ],
     "repository": {
         "type": "git",
-        "url": "git://git@github.com/ivopetkov/responsively-lazy.git"
+        "url": "git://github.com/ivopetkov/responsively-lazy.git"
     },
     "bugs": {
         "url": "http://github.com/ivopetkov/responsively-lazy/issues"
@@ -22,10 +22,5 @@
         "responsive",
         "seo"
     ],
-    "licenses": [
-        {
-            "type": "MIT",
-            "url": "http://opensource.org/licenses/MIT"
-        }
-    ]
+    "license": "MIT"
 }
