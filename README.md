@@ -13,10 +13,8 @@ You can find a demo at [http://ivopetkov.github.io/responsivelyLazy/](http://ivo
 ## Download and install
 
 Download the minified [css](https://raw.githubusercontent.com/ivopetkov/responsively-lazy/master/responsivelyLazy.min.css) and [js](https://raw.githubusercontent.com/ivopetkov/responsively-lazy/master/responsivelyLazy.min.js) files or install through npm and bower
-```
-npm install responsively-lazy
-bower install responsively-lazy
-```
+`npm install responsively-lazy`
+`bower install responsively-lazy`
 
 ## How to use
 
