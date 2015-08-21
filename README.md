@@ -10,6 +10,14 @@ It's the best because it's responsive, truly lazy (absolutely no unnecessary req
 
 You can find a demo at [http://ivopetkov.github.io/responsivelyLazy/](http://ivopetkov.github.io/responsivelyLazy/) and learn how the magic works at [http://ivopetkov.com/b/lazy-load-responsive-images/](http://ivopetkov.com/b/lazy-load-responsive-images/)
 
+## Download and install
+
+Download the minified [css](https://raw.githubusercontent.com/ivopetkov/responsively-lazy/master/responsivelyLazy.min.css) and [js](https://raw.githubusercontent.com/ivopetkov/responsively-lazy/master/responsivelyLazy.min.js) files or install through npm and bower
+```
+npm install responsively-lazy
+bower install responsively-lazy
+```
+
 ## How to use
 
 * Include the css file in the head tag
