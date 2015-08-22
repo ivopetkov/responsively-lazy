@@ -2,7 +2,10 @@
 
 **The best lazy loading implementation available.**
 
-It's the best because it's responsive, truly lazy (absolutely no unnecessary requests) and **SEO friendly**.
+- Handles responsive images
+- Truly lazy (absolutely no unnecessary requests)
+- **SEO friendly** (valid HTML)
+- Supports WebP
 
 <p align="center">
 <img src="http://ivopetkov.github.io/responsivelyLazy/poster.jpg" style="max-width:100%;">
@@ -35,13 +38,14 @@ bower install responsively-lazy
 * Add the following code for each image
 ```
 <div class="responsively-lazy" style="padding-bottom:68.44%;">
-    <img alt="" src="images/2500.jpg" data-srcset="images/600.jpg 600w, images/400.jpg 400w, images/800.jpg 800w, images/1500.jpg 1500w, images/1000.jpg 1000w, images/2000.jpg 2000w" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
+    <img alt="" src="images/2500.jpg" data-srcset="images/400.jpg 400w, images/400.webp 400w, images/600.jpg 600w, images/1000.jpg 1000w" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
 </div>
 ```
 The things to customize are the **padding-bottom** style, and the values of the **src** and **data-srcset** attributes. If you don't know the image aspect ratio you can skip the div tag and move the responsively-lazy class to te img tag:
 ```
-<img class="responsively-lazy" alt="" src="images/2500.jpg" data-srcset="images/600.jpg 600w, images/400.jpg 400w, images/800.jpg 800w, images/1500.jpg 1500w, images/1000.jpg 1000w, images/2000.jpg 2000w" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
+<img class="responsively-lazy" alt="" src="images/2500.jpg" data-srcset="images/400.jpg 400w, images/400.webp 400w, images/600.jpg 600w, images/1000.jpg 1000w" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
 ```
+You can list image versions in the [WebP format](https://en.wikipedia.org/wiki/WebP) which will be used if the browser supports it.
 
 ## Browser support
 

@@ -1,8 +1,8 @@
 {
     "name": "responsively-lazy",
-    "title": "responsivelyLazy - Lazy load responsive images",
-    "version": "1.0.0",
-    "description": "The best lazy loading implementation available. It's the best because it's responsive, truly lazy (absolutely no unnecessary requests) and SEO friendly.",
+    "title": "Responsively Lazy",
+    "version": "1.1.0",
+    "description": "Lazy load responsive images",
     "homepage": "http://ivopetkov.com/b/lazy-load-responsive-images/",
     "author": {
         "name": "Ivo Petkov",

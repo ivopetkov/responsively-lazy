@@ -8,6 +8,7 @@
 if (typeof responsivelyLazy === 'undefined') {
     var responsivelyLazy = {};
     responsivelyLazy.hasChange = true;
+    responsivelyLazy.hasWebPSupport = false;
 
     responsivelyLazy.isVisible = function (container) {
         var rect = container.getBoundingClientRect();
@@ -38,7 +39,19 @@ if (typeof responsivelyLazy === 'undefined') {
                     for (var j = 0; j < optionsCount; j++) {
                         var option = options[j].trim();
                         var spaceIndex = option.lastIndexOf(' ');
-                        temp.push([option.substr(0, spaceIndex), parseInt(option.substr(spaceIndex + 1, option.length - spaceIndex - 2), 10)]);
+                        var optionImage = option.substr(0, spaceIndex);
+                        var optionWidth = parseInt(option.substr(spaceIndex + 1, option.length - spaceIndex - 2), 10);
+                        var add = false;
+                        if (optionImage.indexOf('.webp', optionImage.length - 5) !== -1) {
+                            if (responsivelyLazy.hasWebPSupport) {
+                                add = true;
+                            }
+                        } else {
+                            add = true;
+                        }
+                        if (add) {
+                            temp.push([optionImage, optionWidth]);
+                        }
                     }
                     temp.sort(function (a, b) {
                         if (a[1] < b[1]) {
@@ -46,6 +59,14 @@ if (typeof responsivelyLazy === 'undefined') {
                         }
                         if (a[1] > b[1]) {
                             return 1;
+                        }
+                        if (a[1] === b[1]) {
+                            if (b[0].indexOf('.webp', b[0].length - 5) !== -1) {
+                                return 1;
+                            }
+                            if (a[0].indexOf('.webp', a[0].length - 5) !== -1) {
+                                return -1;
+                            }
                         }
                         return 0;
                     });
@@ -64,6 +85,7 @@ if (typeof responsivelyLazy === 'undefined') {
                         break;
                     }
                 }
+
                 if (bestSelectedOption === null) {
                     bestSelectedOption = [element.getAttribute('src'), 999999];
                 }
@@ -104,10 +126,17 @@ if (typeof responsivelyLazy === 'undefined') {
             responsivelyLazy.hasChange = true;
         }
 
-        runIfHasChange();
+        var image = new Image();
+        image.src = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoCAAEADMDOJaQAA3AA/uuuAAA=';
+        image.onload = image.onerror = function () {
+            responsivelyLazy.hasWebPSupport = image.width === 2;
 
-        window.addEventListener('resize', setChanged);
-        window.addEventListener('scroll', setChanged);
-        window.addEventListener('load', setChanged);
+            runIfHasChange();
+
+            window.addEventListener('resize', setChanged);
+            window.addEventListener('scroll', setChanged);
+            window.addEventListener('load', setChanged);
+
+        };
     }
 }
