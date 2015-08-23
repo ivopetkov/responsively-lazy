@@ -1,11 +1,11 @@
-# responsivelyLazy
+# Responsively Lazy
 
 **The best lazy loading implementation available.**
 
 - Handles responsive images
 - Truly lazy (absolutely no unnecessary requests)
 - **SEO friendly** (valid HTML)
-- Supports WebP
+- Supports [WebP](https://en.wikipedia.org/wiki/WebP)
 
 <p align="center">
 <img src="http://ivopetkov.github.io/responsivelyLazy/poster.jpg" style="max-width:100%;">
@@ -15,7 +15,7 @@ You can find a demo at [http://ivopetkov.github.io/responsivelyLazy/](http://ivo
 
 ## Download and install
 
-Download the minified [css](https://raw.githubusercontent.com/ivopetkov/responsively-lazy/master/responsivelyLazy.min.css) and [js](https://raw.githubusercontent.com/ivopetkov/responsively-lazy/master/responsivelyLazy.min.js) files or install through npm and bower
+Download the minified [css](https://raw.githubusercontent.com/ivopetkov/responsively-lazy/master/responsivelyLazy.min.css) and [js](https://raw.githubusercontent.com/ivopetkov/responsively-lazy/master/responsivelyLazy.min.js) files or install through [npm](https://www.npmjs.com/) and [bower](http://bower.io/)
 ```
 npm install responsively-lazy
 ```
@@ -49,7 +49,7 @@ You can list image versions in the [WebP format](https://en.wikipedia.org/wiki/W
 
 ## Browser support
 
-The lazy loading works in browsers supporting the srcset attribute. As of August 2015 that's [62.78%](http://caniuse.com/#feat=srcset). Unsupported browsers will load the image in the src attribute.
+The lazy loading works in browsers supporting the srcset attribute. As of August 2015 that's [62.78%](http://caniuse.com/#feat=srcset). Unsupported browsers will load the image in the src attribute. That's the image search engines and social networks will find, so it's better to make it high resolution.
 
 ## License
 Free to use under the [MIT license](http://opensource.org/licenses/MIT).
