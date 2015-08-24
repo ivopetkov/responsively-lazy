@@ -78,13 +78,15 @@ if (typeof responsivelyLazy === 'undefined') {
 
                 var bestSelectedOption = null;
                 var optionsCount = options.length;
-                for (var j = 0; j < optionsCount; j++) {
-                    var optionData = options[j];
-                    if (optionData[1] >= containerWidth) {
+
+                for (var i = options.length - 1; i >= 0; i--) {
+                    var optionData = options[i];
+                    if (optionData[1] <= containerWidth) {
                         bestSelectedOption = optionData;
                         break;
                     }
-                }
+
+                };
 
                 if (bestSelectedOption === null) {
                     bestSelectedOption = [element.getAttribute('src'), 999999];
