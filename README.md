@@ -47,6 +47,17 @@ The things to customize are the **padding-bottom** style, and the values of the 
 ```
 You can list image versions in the [WebP format](https://en.wikipedia.org/wiki/WebP) which will be used if the browser supports it.
 
+## A new concept
+
+Responsively Lazy is very different from the other lazy loading libraries. They make you break your HTML by removing the `src` attribute, or make you put tiny version there or make you use `<noscript>` to make your images appear in Google Images. The following code has worked for ages. 
+```
+<img src="image.jpg" />
+```
+Let's not break it when we can enhance it.
+```
+<img src="image.jpg" data-src="image-200.jpg 200w, image-400.jpg 400w" srcset="..." />
+```
+
 ## Browser support
 
 The lazy loading works in browsers supporting the srcset attribute. As of August 2015 that's [62.78%](http://caniuse.com/#feat=srcset). Unsupported browsers will load the image in the src attribute. That's the image search engines and social networks will find, so it's better to make it high resolution.
