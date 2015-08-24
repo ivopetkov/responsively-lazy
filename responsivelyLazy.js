@@ -93,13 +93,13 @@ if (typeof responsivelyLazy === 'undefined') {
                 if (typeof container.lastSetOption === 'undefined') {
                     container.lastSetOption = ['', 0];
                 }
-                if (container.lastSetOption[1] < bestSelectedOption[1]) {
-                    container.lastSetOption = bestSelectedOption;
-                    element.setAttribute('srcset', bestSelectedOption[0]);
-                    if (unknownHeight) {
-                        element.style.height = "auto";
-                    }
+
+                container.lastSetOption = bestSelectedOption;
+                element.setAttribute('srcset', bestSelectedOption[0]);
+                if (unknownHeight) {
+                    element.style.height = "auto";
                 }
+
 
             }
         };
