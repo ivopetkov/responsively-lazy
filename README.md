@@ -23,6 +23,8 @@ npm install responsively-lazy
 bower install responsively-lazy
 ```
 
+The library does not have any dependencies and it's just 1.1kb gzipped and minified.
+
 ## Usage
 
 * Include the css file in the head tag
