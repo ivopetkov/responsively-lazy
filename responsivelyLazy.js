@@ -39,8 +39,13 @@ if (typeof responsivelyLazy === 'undefined') {
                     for (var j = 0; j < optionsCount; j++) {
                         var option = options[j].trim();
                         var spaceIndex = option.lastIndexOf(' ');
-                        var optionImage = option.substr(0, spaceIndex);
-                        var optionWidth = parseInt(option.substr(spaceIndex + 1, option.length - spaceIndex - 2), 10);
+                        if (spaceIndex === -1) {
+                            var optionImage = option;
+                            var optionWidth = 999998;
+                        } else {
+                            var optionImage = option.substr(0, spaceIndex);
+                            var optionWidth = parseInt(option.substr(spaceIndex + 1, option.length - spaceIndex - 2), 10);
+                        }
                         var add = false;
                         if (optionImage.indexOf('.webp', optionImage.length - 5) !== -1) {
                             if (responsivelyLazy.hasWebPSupport) {

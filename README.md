@@ -23,7 +23,7 @@ npm install responsively-lazy
 bower install responsively-lazy
 ```
 
-The library does not have any dependencies and it's just 1.1kb gzipped and minified.
+The library does not have any dependencies, and it's just 1.1kb gzipped and minified.
 
 ## Usage
 
@@ -51,7 +51,7 @@ You can list image versions in the [WebP format](https://en.wikipedia.org/wiki/W
 
 ## A new concept
 
-Responsively Lazy is very different from the other lazy loading libraries. They make you break your HTML by removing the `src` attribute, or make you put tiny version there or make you use `<noscript>` to make your images appear in Google Images. The following code has worked for ages. 
+Responsively Lazy is very different from the other lazy loading libraries. They make you break your HTML by removing the `src` attribute, or make you put tiny version there or make you use `<noscript>` to make your images appear in Google Images. The following code has worked for ages: 
 ```
 <img src="image.jpg" />
 ```
