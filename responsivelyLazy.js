@@ -39,8 +39,13 @@ if (typeof responsivelyLazy === 'undefined') {
                     for (var j = 0; j < optionsCount; j++) {
                         var option = options[j].trim();
                         var spaceIndex = option.lastIndexOf(' ');
-                        var optionImage = option.substr(0, spaceIndex);
-                        var optionWidth = parseInt(option.substr(spaceIndex + 1, option.length - spaceIndex - 2), 10);
+                        if (spaceIndex === -1) {
+                            var optionImage = option;
+                            var optionWidth = 999998;
+                        } else {
+                            var optionImage = option.substr(0, spaceIndex);
+                            var optionWidth = parseInt(option.substr(spaceIndex + 1, option.length - spaceIndex - 2), 10);
+                        }
                         var add = false;
                         if (optionImage.indexOf('.webp', optionImage.length - 5) !== -1) {
                             if (responsivelyLazy.hasWebPSupport) {
@@ -78,15 +83,13 @@ if (typeof responsivelyLazy === 'undefined') {
 
                 var bestSelectedOption = null;
                 var optionsCount = options.length;
-
-                for (var i = options.length - 1; i >= 0; i--) {
-                    var optionData = options[i];
-                    if (optionData[1] <= containerWidth) {
+                for (var j = 0; j < optionsCount; j++) {
+                    var optionData = options[j];
+                    if (optionData[1] >= containerWidth) {
                         bestSelectedOption = optionData;
                         break;
                     }
-
-                };
+                }
 
                 if (bestSelectedOption === null) {
                     bestSelectedOption = [element.getAttribute('src'), 999999];
@@ -96,12 +99,13 @@ if (typeof responsivelyLazy === 'undefined') {
                     container.lastSetOption = ['', 0];
                 }
 
-                container.lastSetOption = bestSelectedOption;
-                element.setAttribute('srcset', bestSelectedOption[0]);
-                if (unknownHeight) {
-                    element.style.height = "auto";
-                }
-
+                // if (container.lastSetOption[1] < bestSelectedOption[1]) {
+                    container.lastSetOption = bestSelectedOption;
+                    element.setAttribute('srcset', bestSelectedOption[0]);
+                    if (unknownHeight) {
+                        element.style.height = "auto";
+                    }
+                // }
 
             }
         };
