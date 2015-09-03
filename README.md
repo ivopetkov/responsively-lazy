@@ -23,6 +23,8 @@ npm install responsively-lazy
 bower install responsively-lazy
 ```
 
+The library does not have any dependencies, and it's just 1.1kb gzipped and minified.
+
 ## Usage
 
 * Include the css file in the head tag
@@ -46,6 +48,17 @@ The things to customize are the **padding-bottom** style, and the values of the 
 <img class="responsively-lazy" alt="" src="images/2500.jpg" data-srcset="images/400.jpg 400w, images/400.webp 400w, images/600.jpg 600w, images/1000.jpg 1000w" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
 ```
 You can list image versions in the [WebP format](https://en.wikipedia.org/wiki/WebP) which will be used if the browser supports it.
+
+## A new concept
+
+Responsively Lazy is very different from the other lazy loading libraries. They make you break your HTML by removing the `src` attribute, or make you put tiny version there or make you use `<noscript>` to make your images appear in Google Images. The following code has worked for ages: 
+```
+<img src="image.jpg" />
+```
+Let's not break it when we can enhance it.
+```
+<img src="image.jpg" data-src="image-200.jpg 200w, image-400.jpg 400w" srcset="..." />
+```
 
 ## Browser support
 
