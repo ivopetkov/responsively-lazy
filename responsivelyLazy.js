@@ -101,8 +101,23 @@ responsivelyLazy = (function () {
                     container.lastSetOption = ['', 0];
                 }
                 if (container.lastSetOption[1] < bestSelectedOption[1]) {
-                    container.lastSetOption = bestSelectedOption;
-                    element.setAttribute('srcset', bestSelectedOption[0]);
+                    (function (container, element, url, fireEvent) {
+                        var image = new Image();
+                        image.addEventListener('load', function () {
+                            element.setAttribute('srcset', url);
+                            if (fireEvent) {
+                                var handler = container.getAttribute('data-onlazyload');
+                                if (handler !== null) {
+                                    (new Function(handler).bind(container))();
+                                }
+                            }
+                        }, false);
+                        image.addEventListener('error', function () {
+                            container.lastSetOption = ['', 0];
+                        }, false);
+                        image.src = url;
+                    })(container, element, bestSelectedOption[0], container.lastSetOption[1] === 0);
+                    container.lastSetOption = bestSelectedOption.slice(0);
                 }
 
             }
