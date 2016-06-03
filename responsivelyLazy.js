@@ -1,34 +1,36 @@
 /*
  * Responsively Lazy
  * http://ivopetkov.com/b/lazy-load-responsive-images/
- * Copyright 2015, Ivo Petkov
+ * Copyright 2015-2016, Ivo Petkov
  * Free to use under the MIT license.
-*/
+ */
 
-if (typeof responsivelyLazy === 'undefined') {
-    var responsivelyLazy = {};
-    responsivelyLazy.hasChange = true;
-    responsivelyLazy.hasWebPSupport = false;
+responsivelyLazy = (function () {
 
-    responsivelyLazy.isVisible = function (container) {
-        var rect = container.getBoundingClientRect();
-        var windowWidth = window.innerWidth;
-        var windowHeight = window.innerHeight;
-        var containerTop = rect.top;
-        var containerLeft = rect.left;
-        var containerWidth = rect.width;
-        var containerHeight = rect.height;
-        return containerTop < windowHeight && containerTop + containerHeight > 0 && containerLeft < windowWidth && containerLeft + containerWidth > 0;
+    var hasChange = true;
+    var hasWebPSupport = false;
+    var windowWidth = null;
+    var windowHeight = null;
+
+    var isVisible = function (element) {
+        if (windowWidth === null) {
+            return false;
+        }
+        var rect = element.getBoundingClientRect();
+        var elementTop = rect.top;
+        var elementLeft = rect.left;
+        var elementWidth = rect.width;
+        var elementHeight = rect.height;
+        return elementTop < windowHeight && elementTop + elementHeight > 0 && elementLeft < windowWidth && elementLeft + elementWidth > 0;
     };
 
-    responsivelyLazy.run = function () {
-
+    var run = function () {
         var update = function (elements, unknownHeight) {
             var elementsCount = elements.length;
             for (var i = 0; i < elementsCount; i++) {
                 var element = elements[i];
                 var container = unknownHeight ? element : element.parentNode;
-                if (!responsivelyLazy.isVisible(container)) {
+                if (!isVisible(container)) {
                     continue;
                 }
                 var options = element.getAttribute('data-srcset');
@@ -48,7 +50,7 @@ if (typeof responsivelyLazy === 'undefined') {
                         }
                         var add = false;
                         if (optionImage.indexOf('.webp', optionImage.length - 5) !== -1) {
-                            if (responsivelyLazy.hasWebPSupport) {
+                            if (hasWebPSupport) {
                                 add = true;
                             }
                         } else {
@@ -111,6 +113,30 @@ if (typeof responsivelyLazy === 'undefined') {
 
     };
 
+    var setChanged = function () {
+        hasChange = true;
+    };
+
+    var updateWindowSize = function () {
+        windowWidth = window.innerWidth;
+        windowHeight = window.innerHeight;
+    };
+
+    var updateParentNodesScrollListeners = function () {
+        var elements = document.querySelectorAll('.responsively-lazy');
+        var elementsCount = elements.length;
+        for (var i = 0; i < elementsCount; i++) {
+            var parentNode = elements[i].parentNode;
+            while (parentNode && parentNode.tagName.toLowerCase() !== 'html') {
+                if (typeof parentNode.responsivelyLazyAttached === 'undefined') {
+                    parentNode.responsivelyLazyAttached = true;
+                    parentNode.addEventListener('scroll', setChanged);
+                }
+                parentNode = parentNode.parentNode;
+            }
+        }
+    };
+
     if ('srcset' in document.createElement('img') && typeof window.devicePixelRatio !== 'undefined' && typeof window.addEventListener !== 'undefined' && typeof document.querySelectorAll !== 'undefined') {
 
         var requestAnimationFrameFunction = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
@@ -118,27 +144,46 @@ if (typeof responsivelyLazy === 'undefined') {
         };
 
         var runIfHasChange = function () {
-            if (responsivelyLazy.hasChange) {
-                responsivelyLazy.hasChange = false;
-                responsivelyLazy.run();
+            if (hasChange) {
+                hasChange = false;
+                run();
             }
             requestAnimationFrameFunction.call(null, runIfHasChange);
         };
-        var setChanged = function () {
-            responsivelyLazy.hasChange = true;
-        }
 
         var image = new Image();
         image.src = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoCAAEADMDOJaQAA3AA/uuuAAA=';
         image.onload = image.onerror = function () {
-            responsivelyLazy.hasWebPSupport = image.width === 2;
-
+            hasWebPSupport = image.width === 2;
+            updateWindowSize();
             runIfHasChange();
-
-            window.addEventListener('resize', setChanged);
-            window.addEventListener('scroll', setChanged);
-            window.addEventListener('load', setChanged);
-
+            var attachEvents = function () {
+                window.addEventListener('resize', function () {
+                    updateWindowSize();
+                    setChanged();
+                });
+                window.addEventListener('scroll', setChanged);
+                window.addEventListener('load', setChanged);
+                updateParentNodesScrollListeners();
+                if (typeof MutationObserver !== 'undefined') {
+                    var observer = new MutationObserver(function () {
+                        updateParentNodesScrollListeners();
+                        setChanged();
+                    });
+                    observer.observe(document.querySelector('body'), {childList: true, subtree: true});
+                }
+            };
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', attachEvents);
+            } else {
+                attachEvents();
+            }
         };
     }
-}
+
+    return {
+        'run': run,
+        'isVisible': isVisible
+    };
+
+}());
