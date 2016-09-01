@@ -5,7 +5,7 @@
  * Free to use under the MIT license.
  */
 
-responsivelyLazy = (function () {
+var responsivelyLazy = (function () {
 
     var hasWebPSupport = false;
     var windowWidth = null;
