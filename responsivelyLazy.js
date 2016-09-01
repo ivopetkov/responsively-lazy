@@ -27,49 +27,57 @@ responsivelyLazy = (function () {
     var updateElement = function (container, element) {
         var options = element.getAttribute('data-srcset');
         if (options !== null) {
-            options = options.split(',');
-            var temp = [];
-            var optionsCount = options.length;
-            for (var j = 0; j < optionsCount; j++) {
-                var option = options[j].trim();
-                var spaceIndex = option.lastIndexOf(' ');
-                if (spaceIndex === -1) {
-                    var optionImage = option;
-                    var optionWidth = 999998;
-                } else {
-                    var optionImage = option.substr(0, spaceIndex);
-                    var optionWidth = parseInt(option.substr(spaceIndex + 1, option.length - spaceIndex - 2), 10);
-                }
-                var add = false;
-                if (optionImage.indexOf('.webp', optionImage.length - 5) !== -1) {
-                    if (hasWebPSupport) {
+            options = options.trim();
+            if (options.length > 0) {
+                options = options.split(',');
+                var temp = [];
+                var optionsCount = options.length;
+                for (var j = 0; j < optionsCount; j++) {
+                    var option = options[j].trim();
+                    if (option.length === 0) {
+                        continue;
+                    }
+                    var spaceIndex = option.lastIndexOf(' ');
+                    if (spaceIndex === -1) {
+                        var optionImage = option;
+                        var optionWidth = 999998;
+                    } else {
+                        var optionImage = option.substr(0, spaceIndex);
+                        var optionWidth = parseInt(option.substr(spaceIndex + 1, option.length - spaceIndex - 2), 10);
+                    }
+                    var add = false;
+                    if (optionImage.indexOf('.webp', optionImage.length - 5) !== -1) {
+                        if (hasWebPSupport) {
+                            add = true;
+                        }
+                    } else {
                         add = true;
                     }
-                } else {
-                    add = true;
-                }
-                if (add) {
-                    temp.push([optionImage, optionWidth]);
-                }
-            }
-            temp.sort(function (a, b) {
-                if (a[1] < b[1]) {
-                    return -1;
-                }
-                if (a[1] > b[1]) {
-                    return 1;
-                }
-                if (a[1] === b[1]) {
-                    if (b[0].indexOf('.webp', b[0].length - 5) !== -1) {
-                        return 1;
+                    if (add) {
+                        temp.push([optionImage, optionWidth]);
                     }
-                    if (a[0].indexOf('.webp', a[0].length - 5) !== -1) {
+                }
+                temp.sort(function (a, b) {
+                    if (a[1] < b[1]) {
                         return -1;
                     }
-                }
-                return 0;
-            });
-            options = temp;
+                    if (a[1] > b[1]) {
+                        return 1;
+                    }
+                    if (a[1] === b[1]) {
+                        if (b[0].indexOf('.webp', b[0].length - 5) !== -1) {
+                            return 1;
+                        }
+                        if (a[0].indexOf('.webp', a[0].length - 5) !== -1) {
+                            return -1;
+                        }
+                    }
+                    return 0;
+                });
+                options = temp;
+            } else {
+                options = [];
+            }
         } else {
             options = [];
         }
