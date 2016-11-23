@@ -62,7 +62,7 @@ Let's not break it when we can enhance it.
 
 ## Browser support
 
-The lazy loading works in browsers supporting the srcset attribute. As of Novembed 2016 that's [83.41%](http://caniuse.com/#feat=srcset). Unsupported browsers will load the image in the src attribute. That's the image search engines and social networks will find, so it's better to make it high resolution.
+The lazy loading works in browsers supporting the srcset attribute. As of November 2016 that's [83.41%](http://caniuse.com/#feat=srcset). Unsupported browsers will load the image in the src attribute. That's the image search engines and social networks will find, so it's better to make it high resolution.
 
 ## License
 Free to use under the [MIT license](http://opensource.org/licenses/MIT).
