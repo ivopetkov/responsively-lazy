@@ -28,7 +28,7 @@ The library does not have any dependencies, and it's just 1.1kb gzipped and mini
 ## Usage
 
 * Include the css file in the head tag
-```httml
+```html
 <link rel="stylesheet" href="responsivelyLazy.min.css">
 ```
 
