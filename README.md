@@ -28,23 +28,23 @@ The library does not have any dependencies, and it's just 1.1kb gzipped and mini
 ## Usage
 
 * Include the css file in the head tag
-```
+```html
 <link rel="stylesheet" href="responsivelyLazy.min.css">
 ```
 
 * Include the js file right before the end of the body tag 
-```
+```html
 <script async src="responsivelyLazy.min.js"></script>
 ```
 
 * Add the following code for each image
-```
+```html
 <div class="responsively-lazy" style="padding-bottom:68.44%;">
     <img alt="" src="images/2500.jpg" data-srcset="images/400.jpg 400w, images/400.webp 400w, images/600.jpg 600w, images/1000.jpg 1000w" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
 </div>
 ```
 The things to customize are the **padding-bottom** style, and the values of the **src** and **data-srcset** attributes. If you don't know the image aspect ratio you can skip the div tag and move the responsively-lazy class to te img tag:
-```
+```html
 <img class="responsively-lazy" alt="" src="images/2500.jpg" data-srcset="images/400.jpg 400w, images/400.webp 400w, images/600.jpg 600w, images/1000.jpg 1000w" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
 ```
 You can list image versions in the [WebP format](https://en.wikipedia.org/wiki/WebP) which will be used if the browser supports it.
@@ -52,11 +52,11 @@ You can list image versions in the [WebP format](https://en.wikipedia.org/wiki/W
 ## A new concept
 
 Responsively Lazy is very different from the other lazy loading libraries. They make you break your HTML by removing the `src` attribute, or make you put tiny version there or make you use `<noscript>` to make your images appear in Google Images. The following code has worked for ages: 
-```
+```html
 <img src="image.jpg" />
 ```
 Let's not break it when we can enhance it.
-```
+```html
 <img src="image.jpg" data-src="image-200.jpg 200w, image-400.jpg 400w" srcset="..." />
 ```
 
