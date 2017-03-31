@@ -1,7 +1,7 @@
 /*
  * Responsively Lazy
  * http://ivopetkov.com/b/lazy-load-responsive-images/
- * Copyright 2015-2016, Ivo Petkov
+ * Copyright 2015-2017, Ivo Petkov
  * Free to use under the MIT license.
  */
 
@@ -97,27 +97,29 @@ var responsivelyLazy = (function () {
             bestSelectedOption = [element.getAttribute('src'), 999999];
         }
 
-        if (typeof container.lastSetOption === 'undefined') {
-            container.lastSetOption = ['', 0];
+        if (typeof container.responsivelyLazyLastSetOption === 'undefined') {
+            container.responsivelyLazyLastSetOption = ['', 0];
         }
-        if (container.lastSetOption[1] < bestSelectedOption[1]) {
-            var fireEvent = container.lastSetOption[1] === 0;
+        if (container.responsivelyLazyLastSetOption[1] < bestSelectedOption[1]) {
+            container.responsivelyLazyLastSetOption = bestSelectedOption;
             var url = bestSelectedOption[0];
-            var image = new Image();
-            image.addEventListener('load', function () {
-                element.setAttribute('srcset', url);
-                if (fireEvent) {
+            if (typeof container.responsivelyLazyEventsAttached === 'undefined') {
+                container.responsivelyLazyEventsAttached = true;
+                element.addEventListener('load', function () {
                     var handler = container.getAttribute('data-onlazyload');
                     if (handler !== null) {
                         (new Function(handler).bind(container))();
                     }
-                }
-            }, false);
-            image.addEventListener('error', function () {
-                container.lastSetOption = ['', 0];
-            }, false);
-            image.src = url;
-            container.lastSetOption = bestSelectedOption;
+                }, false);
+                element.addEventListener('error', function () {
+                    container.responsivelyLazyLastSetOption = ['', 0];
+                }, false);
+            }
+            if (url === element.getAttribute('src')) {
+                element.removeAttribute('srcset');
+            } else {
+                element.setAttribute('srcset', url);
+            }
         }
     };
 
