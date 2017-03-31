@@ -64,6 +64,10 @@ Let's not break it when we can enhance it.
 
 The lazy loading works in browsers supporting the srcset attribute. As of November 2016 that's [83.41%](http://caniuse.com/#feat=srcset). Unsupported browsers will load the image in the src attribute. That's the image search engines and social networks will find, so it's better to make it high resolution.
 
+## DOM changes
+
+The library will listen for DOM changes and you can also trigger visible images loading by calling `responsivelyLazy.run()`.
+
 ## License
 Free to use under the [MIT license](http://opensource.org/licenses/MIT).
 
