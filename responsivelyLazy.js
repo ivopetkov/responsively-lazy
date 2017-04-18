@@ -11,6 +11,8 @@ var responsivelyLazy = (function () {
     var windowWidth = null;
     var windowHeight = null;
     var hasIntersectionObserverSupport = typeof IntersectionObserver !== 'undefined';
+    var mutationObserverIsDisabled = false;
+    var doneElements = []; // elements that should never be updated again
 
     var isVisible = function (element) {
         if (windowWidth === null) {
@@ -24,7 +26,36 @@ var responsivelyLazy = (function () {
         return elementTop < windowHeight && elementTop + elementHeight > 0 && elementLeft < windowWidth && elementLeft + elementWidth > 0;
     };
 
-    var updateElement = function (container, element) {
+    var evalScripts = function (scripts, startIndex) {
+        var scriptsCount = scripts.length;
+        for (var i = startIndex; i < scriptsCount; i++) {
+            var breakAfterThisScript = false;
+            var script = scripts[i];
+            var newScript = document.createElement('script');
+            var type = script.getAttribute('type');
+            if (type !== null) {
+                newScript.setAttribute("type", type);
+            }
+            var src = script.getAttribute('src');
+            if (src !== null) {
+                newScript.setAttribute("src", src);
+                if ((typeof script.async === 'undefined' || script.async === false) && i + 1 < scriptsCount) {
+                    breakAfterThisScript = true;
+                    newScript.addEventListener('load', function () {
+                        evalScripts(scripts, i + 1);
+                    });
+                }
+            }
+            newScript.innerHTML = script.innerHTML;
+            script.parentNode.insertBefore(newScript, script);
+            script.parentNode.removeChild(script);
+            if (breakAfterThisScript) {
+                break;
+            }
+        }
+    };
+
+    var updateImage = function (container, element) {
         var options = element.getAttribute('data-srcset');
         if (options !== null) {
             options = options.trim();
@@ -128,19 +159,48 @@ var responsivelyLazy = (function () {
         windowHeight = window.innerHeight;
     };
 
-    var run = function () {
-        var update = function (elements, unknownHeight) {
-            var elementsCount = elements.length;
-            for (var i = 0; i < elementsCount; i++) {
-                var element = elements[i];
-                var container = unknownHeight ? element : element.parentNode;
-                if (isVisible(container)) {
-                    updateElement(container, element);
-                }
+    var updateElement = function (element) {
+
+        if (doneElements.indexOf(element) !== -1) {
+            return;
+        }
+
+        if (!isVisible(element)) {
+            return;
+        }
+
+        var lazyContent = element.getAttribute('data-lazycontent');
+        if (lazyContent !== null) {
+            doneElements.push(element);
+            mutationObserverIsDisabled = true;
+            element.innerHTML = lazyContent;
+            var scripts = element.querySelectorAll('script');
+            if (scripts.length > 0) {
+                evalScripts(scripts, 0);
             }
-        };
-        update(document.querySelectorAll('.responsively-lazy > img'), false);
-        update(document.querySelectorAll('img.responsively-lazy'), true);
+            mutationObserverIsDisabled = false;
+            return;
+        }
+
+        if (element.tagName.toLowerCase() === 'img') { // image with unknown height
+            updateImage(element, element);
+            return;
+        }
+
+        var imageElement = element.querySelector('img');
+        if (imageElement !== null) { // image with parent container
+            updateImage(element, imageElement);
+            return;
+        }
+
+    };
+
+    var run = function () {
+        var elements = document.querySelectorAll('.responsively-lazy');
+        var elementsCount = elements.length;
+        for (var i = 0; i < elementsCount; i++) {
+            updateElement(elements[i]);
+        }
     };
 
     if ('srcset' in document.createElement('img') && typeof window.devicePixelRatio !== 'undefined' && typeof window.addEventListener !== 'undefined' && typeof document.querySelectorAll !== 'undefined') {
@@ -185,15 +245,7 @@ var responsivelyLazy = (function () {
                     for (var i in entries) {
                         var entry = entries[i];
                         if (entry.intersectionRatio > 0) {
-                            var target = entry.target;
-                            if (target.tagName.toLowerCase() !== 'img') {
-                                var img = target.querySelector('img');
-                                if (img !== null) {
-                                    updateElement(target, img);
-                                }
-                            } else {
-                                updateElement(target, target);
-                            }
+                            updateElement(entry.target);
                         }
                     }
                 });
@@ -241,11 +293,13 @@ var responsivelyLazy = (function () {
                 updateParentNodesScrollListeners();
                 if (typeof MutationObserver !== 'undefined') {
                     var observer = new MutationObserver(function () {
-                        if (hasIntersectionObserverSupport) {
-                            updateIntersectionObservers();
+                        if (!mutationObserverIsDisabled) {
+                            if (hasIntersectionObserverSupport) {
+                                updateIntersectionObservers();
+                            }
+                            updateParentNodesScrollListeners();
+                            setChanged();
                         }
-                        updateParentNodesScrollListeners();
-                        setChanged();
                     });
                     observer.observe(document.querySelector('body'), {childList: true, subtree: true});
                 }
