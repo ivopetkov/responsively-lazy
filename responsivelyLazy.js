@@ -8,6 +8,7 @@
 var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLazy : (function () {
 
     var hasWebPSupport = false;
+    var hasSrcSetSupport = false;
     var windowWidth = null;
     var windowHeight = null;
     var hasIntersectionObserverSupport = typeof IntersectionObserver !== 'undefined';
@@ -112,7 +113,7 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
         } else {
             options = [];
         }
-        var containerWidth = container.offsetWidth * window.devicePixelRatio;
+        var containerWidth = container.offsetWidth * (typeof window.devicePixelRatio !== 'undefined' ? window.devicePixelRatio : 1);
 
         var bestSelectedOption = null;
         var optionsCount = options.length;
@@ -182,15 +183,17 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
             return;
         }
 
-        if (element.tagName.toLowerCase() === 'img') { // image with unknown height
-            updateImage(element, element);
-            return;
-        }
+        if (hasSrcSetSupport) {
+            if (element.tagName.toLowerCase() === 'img') { // image with unknown height
+                updateImage(element, element);
+                return;
+            }
 
-        var imageElement = element.querySelector('img');
-        if (imageElement !== null) { // image with parent container
-            updateImage(element, imageElement);
-            return;
+            var imageElement = element.querySelector('img');
+            if (imageElement !== null) { // image with parent container
+                updateImage(element, imageElement);
+                return;
+            }
         }
 
     };
@@ -203,7 +206,7 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
         }
     };
 
-    if ('srcset' in document.createElement('img') && typeof window.devicePixelRatio !== 'undefined' && typeof window.addEventListener !== 'undefined' && typeof document.querySelectorAll !== 'undefined') {
+    if (typeof window.addEventListener !== 'undefined' && typeof document.querySelectorAll !== 'undefined') {
 
         updateWindowSize();
 
@@ -211,6 +214,7 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
         image.src = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoCAAEADMDOJaQAA3AA/uuuAAA=';
         image.onload = image.onerror = function () {
             hasWebPSupport = image.width === 2;
+            hasSrcSetSupport = 'srcset' in document.createElement('img');
 
             var requestAnimationFrameFunction = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
                 window.setTimeout(callback, 1000 / 60);
