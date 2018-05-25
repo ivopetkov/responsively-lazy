@@ -9,6 +9,10 @@
         "email": "ivo@ivopetkov.com",
         "url": "http://ivopetkov.com/"
     },
+    "contributors": [{
+        "name": "Silvio Ginter",
+        "email": "silvio.ginter@googlemail.com"
+    }],
     "repository": {
         "type": "git",
         "url": "https://github.com/ivopetkov/responsively-lazy"
@@ -22,10 +26,21 @@
         "responsive",
         "seo"
     ],
-    "licenses": [
-        {
-            "type": "MIT",
-            "url": "http://opensource.org/licenses/MIT"
-        }
-    ]
+    "licenses": [{
+        "type": "MIT",
+        "url": "http://opensource.org/licenses/MIT"
+    }],
+    "scripts": {
+        "build:js": "npx babel src/ --out-file lib/responsivelyLazy.min.js",
+        "build:prod": "BABEL_ENV=production npm run build:js"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-eslint": "^7.1.1",
+        "babel-minify": "0.4.3",
+        "babel-plugin-transform-undefined-to-void": "^6.9.4",
+        "babel-preset-env": "^1.7.0",
+        "babel-preset-minify": "^0.4.3",
+        "babel-preset-es2015": "^6.24.1"
+    }
 }

@@ -1,0 +1,12 @@
+{
+    "presets": ["es2015"],
+    "env": {
+        "production": {
+            "presets": ["minify"],
+            "comments": true,
+            "plugins": [
+                "transform-undefined-to-void"
+            ]
+        }
+    }
+}
