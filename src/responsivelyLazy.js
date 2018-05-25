@@ -5,45 +5,47 @@
  * @license
  * Copyright 2015-2017, Ivo Petkov Free to use under the MIT license.
  */
+var responsivelyLazy = responsivelyLazy || (function () {
 
-var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLazy : (function () {
+    let hasWebPSupport = false;
+    let hasSrcSetSupport = false;
+    let windowWidth = null;
+    let windowHeight = null;
+    let mutationObserverIsDisabled = false;
+    const hasIntersectionObserverSupport = IntersectionObserver !== void 0;
+    const doneElements = []; // elements that should never be updated again
 
-    var hasWebPSupport = false;
-    var hasSrcSetSupport = false;
-    var windowWidth = null;
-    var windowHeight = null;
-    var hasIntersectionObserverSupport = typeof IntersectionObserver !== 'undefined';
-    var mutationObserverIsDisabled = false;
-    var doneElements = []; // elements that should never be updated again
-
-    var isVisible = function (element) {
+    function isVisible(element) {
         if (windowWidth === null) {
             return false;
         }
-        var rect = element.getBoundingClientRect();
-        var elementTop = rect.top;
-        var elementLeft = rect.left;
-        var elementWidth = rect.width;
-        var elementHeight = rect.height;
-        return elementTop < windowHeight && elementTop + elementHeight > 0 && elementLeft < windowWidth && elementLeft + elementWidth > 0;
-    };
 
-    var evalScripts = function (scripts, startIndex) {
-        var scriptsCount = scripts.length;
-        for (var i = startIndex; i < scriptsCount; i++) {
-            var breakAfterThisScript = false;
-            var script = scripts[i];
-            var newScript = document.createElement('script');
-            var type = script.getAttribute('type');
+        const {
+            top: elementTop,
+            left: elementLeft,
+            width: elementWidth,
+            height: elementHeight
+        } = element.getBoundingClientRect();
+
+        return elementTop < windowHeight && elementTop + elementHeight > 0 && elementLeft < windowWidth && elementLeft + elementWidth > 0;
+    }
+
+    function evalScripts(scripts, startIndex) {
+        for (let i = startIndex; i < scripts.length; i++) {
+            let breakAfterThisScript = false;
+            let script = scripts[i];
+            const newScript = document.createElement('script');
+            const type = script.getAttribute('type');
             if (type !== null) {
                 newScript.setAttribute("type", type);
             }
             var src = script.getAttribute('src');
             if (src !== null) {
                 newScript.setAttribute("src", src);
-                if ((typeof script.async === 'undefined' || script.async === false) && i + 1 < scriptsCount) {
+                if ((script.async === void 0 || script.async === false) && i + 1 < scripts.length) {
                     breakAfterThisScript = true;
-                    newScript.addEventListener('load', function () {
+                    // jshint -W083
+                    newScript.addEventListener('load', () => {
                         evalScripts(scripts, i + 1);
                     });
                 }
@@ -55,71 +57,59 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
                 break;
             }
         }
-    };
+    }
 
-    var updateImage = function (container, element) {
-        var options = element.getAttribute('data-srcset');
-        if (options !== null) {
-            options = options.trim();
-            if (options.length > 0) {
-                options = options.split(',');
-                var temp = [];
-                var optionsCount = options.length;
-                for (var j = 0; j < optionsCount; j++) {
-                    var option = options[j].trim();
-                    if (option.length === 0) {
-                        continue;
-                    }
-                    var spaceIndex = option.lastIndexOf(' ');
-                    if (spaceIndex === -1) {
-                        var optionImage = option;
-                        var optionWidth = 999998;
-                    } else {
-                        var optionImage = option.substr(0, spaceIndex);
-                        var optionWidth = parseInt(option.substr(spaceIndex + 1, option.length - spaceIndex - 2), 10);
-                    }
-                    var add = false;
-                    if (optionImage.indexOf('.webp', optionImage.length - 5) !== -1) {
-                        if (hasWebPSupport) {
-                            add = true;
-                        }
-                    } else {
-                        add = true;
-                    }
-                    if (add) {
-                        temp.push([optionImage, optionWidth]);
-                    }
+    function isWebPImage(candidate) {
+        return candidate.indexOf('.webp', candidate.length - 5) !== -1;
+    }
+
+    function updateImage(container, element) {
+        const options = (element.getAttribute('data-srcset') || '')
+            .trim()
+            .split(',')
+            .map(item => {
+                item = item.trim();
+                if (item.length === 0) {
+                    return false;
                 }
-                temp.sort(function (a, b) {
-                    if (a[1] < b[1]) {
-                        return -1;
-                    }
-                    if (a[1] > b[1]) {
-                        return 1;
-                    }
-                    if (a[1] === b[1]) {
-                        if (b[0].indexOf('.webp', b[0].length - 5) !== -1) {
-                            return 1;
-                        }
-                        if (a[0].indexOf('.webp', a[0].length - 5) !== -1) {
-                            return -1;
-                        }
-                    }
-                    return 0;
-                });
-                options = temp;
-            } else {
-                options = [];
-            }
-        } else {
-            options = [];
-        }
-        var containerWidth = container.offsetWidth * (typeof window.devicePixelRatio !== 'undefined' ? window.devicePixelRatio : 1);
 
-        var bestSelectedOption = null;
-        var optionsCount = options.length;
-        for (var j = 0; j < optionsCount; j++) {
-            var optionData = options[j];
+                let optionImage = item;
+                let optionWidth = 999998;
+                const spaceIndex = item.lastIndexOf(' ');
+                if (spaceIndex !== -1) {
+                    optionImage = item.substr(0, spaceIndex);
+                    optionWidth = parseInt(item.substr(spaceIndex + 1, item.length - spaceIndex - 2), 10);
+                }
+
+                if (isWebPImage(optionImage) ? hasWebPSupport : true) {
+                    return [optionImage, optionWidth];
+                }
+
+                return false;
+            })
+            .filter(item => Array.isArray(item));
+
+        options.sort((a, b) => {
+            if (a[1] === b[1]) {
+
+                if (isWebPImage(b[0])) {
+                    return 1;
+                }
+
+                if (isWebPImage(a[0])) {
+                    return -1;
+                }
+
+                return 0;
+            }
+
+            return (a[1] < b[1]) ? -1 : 1;
+        });
+
+        const containerWidth = container.getBoundingClientRect().width * (window.devicePixelRatio !== void 0 ? window.devicePixelRatio : 1);
+
+        let bestSelectedOption = null;
+        for (let optionData of options) {
             if (optionData[1] >= containerWidth) {
                 bestSelectedOption = optionData;
                 break;
@@ -130,38 +120,42 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
             bestSelectedOption = [element.getAttribute('src'), 999999];
         }
 
-        if (typeof container.responsivelyLazyLastSetOption === 'undefined') {
+        if (container.responsivelyLazyLastSetOption === void 0) {
             container.responsivelyLazyLastSetOption = ['', 0];
         }
+
         if (container.responsivelyLazyLastSetOption[1] < bestSelectedOption[1]) {
             container.responsivelyLazyLastSetOption = bestSelectedOption;
             var url = bestSelectedOption[0];
-            if (typeof container.responsivelyLazyEventsAttached === 'undefined') {
+            if (container.responsivelyLazyEventsAttached === void 0) {
                 container.responsivelyLazyEventsAttached = true;
-                element.addEventListener('load', function () {
+                element.addEventListener('load', () => {
                     var handler = container.getAttribute('data-onlazyload');
                     if (handler !== null) {
+                        // jshint -W054
                         (new Function(handler).bind(container))();
                     }
                 }, false);
-                element.addEventListener('error', function () {
+                element.addEventListener('error', () => {
                     container.responsivelyLazyLastSetOption = ['', 0];
                 }, false);
             }
+
             if (url === element.getAttribute('src')) {
                 element.removeAttribute('srcset');
-            } else {
-                element.setAttribute('srcset', url);
+                return;
             }
-        }
-    };
 
-    var updateWindowSize = function () {
+            element.setAttribute('srcset', url);
+        }
+    }
+
+    function updateWindowSize() {
         windowWidth = window.innerWidth;
         windowHeight = window.innerHeight;
-    };
+    }
 
-    var updateElement = function (element) {
+    function updateElement(element) {
 
         if (doneElements.indexOf(element) !== -1) {
             return;
@@ -196,130 +190,132 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
                 return;
             }
         }
+    }
 
-    };
-
-    var run = function () {
+    function run() {
         var elements = document.querySelectorAll('.responsively-lazy');
         var elementsCount = elements.length;
         for (var i = 0; i < elementsCount; i++) {
             updateElement(elements[i]);
         }
-    };
+    }
 
-    if (typeof window.addEventListener !== 'undefined' && typeof document.querySelectorAll !== 'undefined') {
+    if (window.addEventListener !== void 0 && document.querySelectorAll !== void 0) {
 
         updateWindowSize();
 
         var image = new Image();
         image.src = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoCAAEADMDOJaQAA3AA/uuuAAA=';
-        image.onload = image.onerror = function () {
+        image.onload = image.onerror = () => {
             hasWebPSupport = image.width === 2;
             hasSrcSetSupport = 'srcset' in document.createElement('img');
 
-            var requestAnimationFrameFunction = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
+            const requestAnimationFrameFunction = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
                 window.setTimeout(callback, 1000 / 60);
             };
 
-            var hasChange = true;
-            var runIfHasChange = function () {
+            let hasChange = true;
+
+            function runIfHasChange() {
                 if (hasChange) {
                     hasChange = false;
                     run();
                 }
                 requestAnimationFrameFunction.call(null, runIfHasChange);
-            };
+            }
 
             runIfHasChange();
 
-            if (hasIntersectionObserverSupport) {
+            let setChanged = () => {
+                hasChange = true;
+            };
 
-                var updateIntersectionObservers = function () {
-                    var elements = document.querySelectorAll('.responsively-lazy');
-                    var elementsCount = elements.length;
-                    for (var i = 0; i < elementsCount; i++) {
-                        var element = elements[i];
-                        if (typeof element.responsivelyLazyObserverAttached === 'undefined') {
+            if (hasIntersectionObserverSupport) {
+                let changeTimeout = null;
+
+                setChanged = () => {
+                    window.clearTimeout(changeTimeout);
+                    changeTimeout = window.setTimeout(() => {
+                        hasChange = true;
+                    }, 300);
+                };
+
+                const updateIntersectionObservers = () => {
+                    const elements = document.querySelectorAll('.responsively-lazy');
+                    elements.forEach(element => {
+                        if (element.responsivelyLazyObserverAttached === void 0) {
                             element.responsivelyLazyObserverAttached = true;
                             intersectionObserver.observe(element);
                         }
-                    }
+                    });
                 };
 
-                var intersectionObserver = new IntersectionObserver(function (entries) {
-                    for (var i in entries) {
-                        var entry = entries[i];
+                const intersectionObserver = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
                         if (entry.intersectionRatio > 0) {
                             updateElement(entry.target);
                         }
-                    }
+                    });
                 });
-
-                var changeTimeout = null;
-
             }
 
-            var setChanged = function () {
-                if (hasIntersectionObserverSupport) {
-                    window.clearTimeout(changeTimeout);
-                    changeTimeout = window.setTimeout(function () {
-                        hasChange = true;
-                    }, 300);
-                } else {
-                    hasChange = true;
-                }
-            };
-
-            var updateParentNodesScrollListeners = function () {
-                var elements = document.querySelectorAll('.responsively-lazy');
-                var elementsCount = elements.length;
-                for (var i = 0; i < elementsCount; i++) {
-                    var parentNode = elements[i].parentNode;
+            function updateParentNodesScrollListeners() {
+                const elements = document.querySelectorAll('.responsively-lazy');
+                elements.forEach(element => {
+                    let parentNode = element.parentNode;
                     while (parentNode && parentNode.tagName.toLowerCase() !== 'html') {
-                        if (typeof parentNode.responsivelyLazyScrollAttached === 'undefined') {
+                        if (parentNode.responsivelyLazyScrollAttached === void 0) {
                             parentNode.responsivelyLazyScrollAttached = true;
                             parentNode.addEventListener('scroll', setChanged);
                         }
                         parentNode = parentNode.parentNode;
                     }
-                }
-            };
+                });
+            }
 
-            var initialize = function () {
-                window.addEventListener('resize', function () {
+            function initialize() {
+                window.addEventListener('resize', () => {
                     updateWindowSize();
                     setChanged();
                 });
                 window.addEventListener('scroll', setChanged);
                 window.addEventListener('load', setChanged);
+
                 if (hasIntersectionObserverSupport) {
                     updateIntersectionObservers();
                 }
                 updateParentNodesScrollListeners();
-                if (typeof MutationObserver !== 'undefined') {
-                    var observer = new MutationObserver(function () {
-                        if (!mutationObserverIsDisabled) {
-                            if (hasIntersectionObserverSupport) {
-                                updateIntersectionObservers();
-                            }
-                            updateParentNodesScrollListeners();
-                            setChanged();
+                if (MutationObserver !== void 0) {
+                    const observer = new MutationObserver(() => {
+                        if (mutationObserverIsDisabled) {
+                            return;
                         }
+
+                        if (hasIntersectionObserverSupport) {
+                            updateIntersectionObservers();
+                        }
+                        updateParentNodesScrollListeners();
+                        setChanged();
                     });
-                    observer.observe(document.querySelector('body'), {childList: true, subtree: true});
+                    observer.observe(document.querySelector('body'), {
+                        childList: true,
+                        subtree: true
+                    });
                 }
-            };
+            }
+
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', initialize);
-            } else {
-                initialize();
+                return;
             }
+
+            initialize();
         };
     }
 
     return {
-        'run': run,
-        'isVisible': isVisible
+        run,
+        isVisible
     };
 
 }());
