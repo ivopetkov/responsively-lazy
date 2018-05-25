@@ -9,26 +9,28 @@ var responsivelyLazy = responsivelyLazy || (function () {
 
     let hasWebPSupport = false;
     let hasSrcSetSupport = false;
-    let windowWidth = null;
-    let windowHeight = null;
     let mutationObserverIsDisabled = false;
-    const hasIntersectionObserverSupport = IntersectionObserver !== void 0;
     const doneElements = []; // elements that should never be updated again
 
-    function isVisible(element) {
-        if (windowWidth === null) {
-            return false;
+    // request polyfills, if needed
+    (function() {
+        const polyFillsNeeded = [];      
+        if (MutationObserver === void 0) {
+            polyFillsNeeded.push('MutationObserver');
         }
-
-        const {
-            top: elementTop,
-            left: elementLeft,
-            width: elementWidth,
-            height: elementHeight
-        } = element.getBoundingClientRect();
-
-        return elementTop < windowHeight && elementTop + elementHeight > 0 && elementLeft < windowWidth && elementLeft + elementWidth > 0;
-    }
+        
+        if (IntersectionObserver === void 0) {
+            polyFillsNeeded.push('IntersectionObserver');
+        }
+        
+        if (polyFillsNeeded.length) {
+            const polyFillRequest = document.createElement('script');
+            polyFillRequest.async = 1;
+            polyFillRequest.src = `https://polyfill.io/v2/polyfill.min.js?features=${polyFillsNeeded.join('.')}`;
+            const firstScript = document.getElementsByTagName('script')[0];
+            firstScript.parentNode.insertBefore(polyFillRequest, firstScript);
+        }
+    })();
 
     function evalScripts(scripts, startIndex) {
         for (let i = startIndex; i < scripts.length; i++) {
@@ -51,8 +53,7 @@ var responsivelyLazy = responsivelyLazy || (function () {
                 }
             }
             newScript.innerHTML = script.innerHTML;
-            script.parentNode.insertBefore(newScript, script);
-            script.parentNode.removeChild(script);
+            script.parentNode.replaceChild(newScript, script);
             if (breakAfterThisScript) {
                 break;
             }
@@ -126,11 +127,11 @@ var responsivelyLazy = responsivelyLazy || (function () {
 
         if (container.responsivelyLazyLastSetOption[1] < bestSelectedOption[1]) {
             container.responsivelyLazyLastSetOption = bestSelectedOption;
-            var url = bestSelectedOption[0];
+            const url = bestSelectedOption[0];
             if (container.responsivelyLazyEventsAttached === void 0) {
                 container.responsivelyLazyEventsAttached = true;
                 element.addEventListener('load', () => {
-                    var handler = container.getAttribute('data-onlazyload');
+                    const handler = container.getAttribute('data-onlazyload');
                     if (handler !== null) {
                         // jshint -W054
                         (new Function(handler).bind(container))();
@@ -150,18 +151,9 @@ var responsivelyLazy = responsivelyLazy || (function () {
         }
     }
 
-    function updateWindowSize() {
-        windowWidth = window.innerWidth;
-        windowHeight = window.innerHeight;
-    }
-
     function updateElement(element) {
 
         if (doneElements.indexOf(element) !== -1) {
-            return;
-        }
-
-        if (!isVisible(element)) {
             return;
         }
 
@@ -170,7 +162,7 @@ var responsivelyLazy = responsivelyLazy || (function () {
             doneElements.push(element);
             mutationObserverIsDisabled = true;
             element.innerHTML = lazyContent;
-            var scripts = element.querySelectorAll('script');
+            const scripts = element.querySelectorAll('script');
             if (scripts.length > 0) {
                 evalScripts(scripts, 0);
             }
@@ -178,130 +170,59 @@ var responsivelyLazy = responsivelyLazy || (function () {
             return;
         }
 
-        if (hasSrcSetSupport) {
-            if (element.tagName.toLowerCase() === 'img') { // image with unknown height
-                updateImage(element, element);
-                return;
-            }
-
-            var imageElement = element.querySelector('img');
-            if (imageElement !== null) { // image with parent container
-                updateImage(element, imageElement);
-                return;
-            }
+        if (!hasSrcSetSupport) {
+            return;
         }
-    }
 
-    function run() {
-        var elements = document.querySelectorAll('.responsively-lazy');
-        var elementsCount = elements.length;
-        for (var i = 0; i < elementsCount; i++) {
-            updateElement(elements[i]);
+        if (element.tagName.toLowerCase() === 'img') { // image with unknown height
+            updateImage(element, element);
+            return;
+        }
+
+        const imageElement = element.querySelector('img');
+        if (imageElement !== null) { // image with parent container
+            updateImage(element, imageElement);
         }
     }
 
     if (window.addEventListener !== void 0 && document.querySelectorAll !== void 0) {
-
-        updateWindowSize();
-
-        var image = new Image();
+        const image = new Image();
         image.src = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoCAAEADMDOJaQAA3AA/uuuAAA=';
         image.onload = image.onerror = () => {
             hasWebPSupport = image.width === 2;
             hasSrcSetSupport = 'srcset' in document.createElement('img');
 
-            const requestAnimationFrameFunction = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
-                window.setTimeout(callback, 1000 / 60);
-            };
-
-            let hasChange = true;
-
-            function runIfHasChange() {
-                if (hasChange) {
-                    hasChange = false;
-                    run();
-                }
-                requestAnimationFrameFunction.call(null, runIfHasChange);
-            }
-
-            runIfHasChange();
-
-            let setChanged = () => {
-                hasChange = true;
-            };
-
-            if (hasIntersectionObserverSupport) {
-                let changeTimeout = null;
-
-                setChanged = () => {
-                    window.clearTimeout(changeTimeout);
-                    changeTimeout = window.setTimeout(() => {
-                        hasChange = true;
-                    }, 300);
-                };
-
-                const updateIntersectionObservers = () => {
-                    const elements = document.querySelectorAll('.responsively-lazy');
-                    elements.forEach(element => {
-                        if (element.responsivelyLazyObserverAttached === void 0) {
-                            element.responsivelyLazyObserverAttached = true;
-                            intersectionObserver.observe(element);
-                        }
-                    });
-                };
-
-                const intersectionObserver = new IntersectionObserver(entries => {
-                    entries.forEach(entry => {
-                        if (entry.intersectionRatio > 0) {
-                            updateElement(entry.target);
-                        }
-                    });
-                });
-            }
-
-            function updateParentNodesScrollListeners() {
-                const elements = document.querySelectorAll('.responsively-lazy');
-                elements.forEach(element => {
-                    let parentNode = element.parentNode;
-                    while (parentNode && parentNode.tagName.toLowerCase() !== 'html') {
-                        if (parentNode.responsivelyLazyScrollAttached === void 0) {
-                            parentNode.responsivelyLazyScrollAttached = true;
-                            parentNode.addEventListener('scroll', setChanged);
-                        }
-                        parentNode = parentNode.parentNode;
-                    }
-                });
-            }
-
-            function initialize() {
-                window.addEventListener('resize', () => {
-                    updateWindowSize();
-                    setChanged();
-                });
-                window.addEventListener('scroll', setChanged);
-                window.addEventListener('load', setChanged);
-
-                if (hasIntersectionObserverSupport) {
-                    updateIntersectionObservers();
-                }
-                updateParentNodesScrollListeners();
-                if (MutationObserver !== void 0) {
-                    const observer = new MutationObserver(() => {
-                        if (mutationObserverIsDisabled) {
+            function updateIntersectionObservers () {
+                document.querySelectorAll('.responsively-lazy')
+                    .forEach(element => {
+                        if (element.responsivelyLazyObserverAttached) {
                             return;
                         }
+                        element.responsivelyLazyObserverAttached = true;
+                        intersectionObserver.observe(element);
+                    });
+            }
 
-                        if (hasIntersectionObserverSupport) {
-                            updateIntersectionObservers();
-                        }
-                        updateParentNodesScrollListeners();
-                        setChanged();
-                    });
-                    observer.observe(document.querySelector('body'), {
-                        childList: true,
-                        subtree: true
-                    });
-                }
+            const intersectionObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.intersectionRatio > 0) {
+                        updateElement(entry.target);
+                    }
+                });
+            });
+
+            function initialize() {
+                updateIntersectionObservers();
+                const observer = new MutationObserver(() => {
+                    if (mutationObserverIsDisabled) {
+                        return;
+                    }
+                    updateIntersectionObservers();
+                });
+                observer.observe(document.querySelector('body'), {
+                    childList: true,
+                    subtree: true
+                });
             }
 
             if (document.readyState === 'loading') {
@@ -312,10 +233,4 @@ var responsivelyLazy = responsivelyLazy || (function () {
             initialize();
         };
     }
-
-    return {
-        run,
-        isVisible
-    };
-
 }());
