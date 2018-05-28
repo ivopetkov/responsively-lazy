@@ -24,6 +24,8 @@ bower install responsively-lazy
 ```
 
 The library does not have any dependencies, and it's just 1.1kb gzipped and minified.
+If the browser lacks support for `MutationObserver` and/or `IntersectionObserver`, they will be fetched from https://polyfill.io automatically.
+
 
 ## Usage
 
@@ -34,6 +36,12 @@ The library does not have any dependencies, and it's just 1.1kb gzipped and mini
 
 * Include the js file right before the end of the body tag 
 ```html
+<script async src="responsivelyLazy.min.js"></script>
+```
+
+* You can modify the the intersection boundaries, the root element and the threshold by defining a configuration object, just before including the library. For further information, please read the [API documentation for IntersectionObserver at the Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
+```html
+<script>var responsivelyLazyConfig = {rootMargin: '0px 0px', threshold: 0.8}</script>
 <script async src="responsivelyLazy.min.js"></script>
 ```
 
@@ -66,7 +74,7 @@ The lazy loading works in browsers supporting the srcset attribute. As of Decemb
 
 ## DOM changes
 
-The library will listen for DOM changes and you can also trigger visible images loading by calling `responsivelyLazy.run()`.
+The library will listen for DOM changes and find dynamically created images and observe them automatically.
 
 ## License
 Free to use under the [MIT license](http://opensource.org/licenses/MIT).

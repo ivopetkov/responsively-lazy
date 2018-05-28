@@ -5,7 +5,8 @@
  * @license
  * Copyright 2015-2017, Ivo Petkov Free to use under the MIT license.
  */
-var responsivelyLazy = responsivelyLazy || (function () {
+
+var responsivelyLazy = responsivelyLazy || (function (config) {
 
     let hasWebPSupport = false;
     let hasSrcSetSupport = false;
@@ -13,16 +14,16 @@ var responsivelyLazy = responsivelyLazy || (function () {
     const doneElements = []; // elements that should never be updated again
 
     // request polyfills, if needed
-    (function() {
-        const polyFillsNeeded = [];      
+    (function () {
+        const polyFillsNeeded = [];
         if (MutationObserver === void 0) {
             polyFillsNeeded.push('MutationObserver');
         }
-        
+
         if (IntersectionObserver === void 0) {
             polyFillsNeeded.push('IntersectionObserver');
         }
-        
+
         if (polyFillsNeeded.length) {
             const polyFillRequest = document.createElement('script');
             polyFillRequest.async = 1;
@@ -36,24 +37,24 @@ var responsivelyLazy = responsivelyLazy || (function () {
         for (let i = startIndex; i < scripts.length; i++) {
             let breakAfterThisScript = false;
             let script = scripts[i];
-            const newScript = document.createElement('script');
+            const evScript = document.createElement('script');
             const type = script.getAttribute('type');
             if (type !== null) {
-                newScript.setAttribute("type", type);
+                evScript.setAttribute("type", type);
             }
             var src = script.getAttribute('src');
             if (src !== null) {
-                newScript.setAttribute("src", src);
+                evScript.setAttribute("src", src);
                 if ((script.async === void 0 || script.async === false) && i + 1 < scripts.length) {
                     breakAfterThisScript = true;
                     // jshint -W083
-                    newScript.addEventListener('load', () => {
+                    evScript.addEventListener('load', () => {
                         evalScripts(scripts, i + 1);
                     });
                 }
             }
-            newScript.innerHTML = script.innerHTML;
-            script.parentNode.replaceChild(newScript, script);
+            evScript.innerHTML = script.innerHTML;
+            script.parentNode.replaceChild(evScript, script);
             if (breakAfterThisScript) {
                 break;
             }
@@ -192,7 +193,7 @@ var responsivelyLazy = responsivelyLazy || (function () {
             hasWebPSupport = image.width === 2;
             hasSrcSetSupport = 'srcset' in document.createElement('img');
 
-            function updateIntersectionObservers () {
+            function updateIntersectionObservers() {
                 document.querySelectorAll('.responsively-lazy')
                     .forEach(element => {
                         if (element.responsivelyLazyObserverAttached) {
@@ -203,13 +204,26 @@ var responsivelyLazy = responsivelyLazy || (function () {
                     });
             }
 
+            config = Object.assign({}, config);
+            if (config.root && !config.root.nodeType) {
+                config.root = document.querySelector(config.root);
+            }
+
             const intersectionObserver = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
                     if (entry.intersectionRatio > 0) {
                         updateElement(entry.target);
                     }
                 });
-            });
+            }, config);
+
+            if (config.hasOwnProperty('POLL_INTERVAL')) {
+                intersectionObserver.POLL_INTERVAL = config.POLL_INTERVAL;
+            }
+
+            if (config.hasOwnProperty('USE_MUTATION_OBSERVER')) {
+                intersectionObserver.USE_MUTATION_OBSERVER = config.USE_MUTATION_OBSERVER;
+            }
 
             function initialize() {
                 updateIntersectionObservers();
@@ -233,4 +247,4 @@ var responsivelyLazy = responsivelyLazy || (function () {
             initialize();
         };
     }
-}());
+}(responsivelyLazyConfig || {}));
