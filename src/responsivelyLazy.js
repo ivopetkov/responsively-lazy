@@ -5,7 +5,7 @@
  * @license
  * Copyright 2015-2017, Ivo Petkov Free to use under the MIT license.
  */
-
+var responsivelyLazyConfig = responsivelyLazyConfig || {};
 var responsivelyLazy = responsivelyLazy || (function (config) {
 
     let hasWebPSupport = false;
@@ -247,4 +247,4 @@ var responsivelyLazy = responsivelyLazy || (function (config) {
             initialize();
         };
     }
-}(responsivelyLazyConfig || {}));
+}(responsivelyLazyConfig));
