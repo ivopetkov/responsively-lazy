@@ -6,8 +6,7 @@
                 ["minify", {
                     "mangle": false
                 }]
-            ],
-            "comments": true
+            ]
         }
     }
 }

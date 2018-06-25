@@ -1,0 +1,166 @@
+
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,minimal-ui" />
+        <meta charset="utf-8">
+        <title>responsivelyLazy demo</title>
+        <meta name="description" content="responsivelyLazy demo">
+        <meta name="author" content="ivopetkov.com">
+        <link rel="stylesheet" href="./lib/responsivelyLazy.min.css">
+        <style>
+            body {
+                padding: 30px;
+                padding-bottom: 0;
+                line-height: 180%;
+                background-color: #f5f5f5;
+            }
+
+            .example-title {
+                text-align: center;
+                font-family: Arial;
+                padding: 10px;
+                font-size: 15px;
+            }
+
+            .example-image {
+                border: 1px solid #ccc;
+                background-color: #fff;
+                padding: 5px;
+                margin: 0 auto;
+                margin-bottom: 30px;
+                border-radius: 2px;
+                line-height: 0;
+            }
+
+            .example-image.loading:before{
+                content:"Loading...";
+                background-color:#1380BA;
+                display:inline-block;
+                padding:20px 15px;
+                z-index:100;
+                position:absolute;
+                font-family:Arial;
+                font-size:14px;
+                color:#fff;
+                margin-top:5px;
+                margin-left:5px;
+            }
+
+            .example-image.loaded:before{
+                content:"Loaded";
+                background-color:#5BAD0E;
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <h1 style="text-align: center; font-size: 50px; line-height:80px; padding-bottom: 30px;">Lazy load
+            <br/>responsive images
+            <br/>demo</h1>
+        <div style="max-width:600px; margin:0 auto; text-align:center; font-family: Arial; padding-bottom:60px; font-size: 15px;">Article:
+            <a style="color:#000;text-decoration:underline;" href="http://ivopetkov.com/b/lazy-load-responsive-images/">http://ivopetkov.com/b/lazy-load-responsive-images/</a>
+            <br/>
+            <br/>In this demo, you'll find four div tags with various sizes. When the image inside each div becomes visible on the
+            screen, the best version is selected and loaded. The available versions widths are 400px, 600px, 800px, 1000px, 1500px,
+            2000px, 2500px. You can easily see which version is loaded via the text inside the image.</div>
+        <div class="example-title">max-width: 500px</div>
+        <div class="example-image" style="max-width:500px;">
+            <div class="responsively-lazy" style="padding-bottom:68.44%;">
+                <img alt="reponsivelyLazy demo image" src="http://ivopetkov.github.io/responsivelyLazy/images/2500.jpg" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                     data-srcset="http://ivopetkov.github.io/responsivelyLazy/images/400.jpg 400w, http://ivopetkov.github.io/responsivelyLazy/images/400.webp 400w, http://ivopetkov.github.io/responsivelyLazy/images/600.jpg 600w, http://ivopetkov.github.io/responsivelyLazy/images/600.webp 600w, http://ivopetkov.github.io/responsivelyLazy/images/800.jpg 800w, http://ivopetkov.github.io/responsivelyLazy/images/800.webp 800w, http://ivopetkov.github.io/responsivelyLazy/images/1000.jpg 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1000.webp 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1500.jpg 1500w, http://ivopetkov.github.io/responsivelyLazy/images/1500.webp 1500w, http://ivopetkov.github.io/responsivelyLazy/images/2000.jpg 2000w, http://ivopetkov.github.io/responsivelyLazy/images/2000.webp 2000w"
+                     />
+            </div>
+        </div>
+        <div class="example-title">max-width: 900px</div>
+        <div class="example-image" style="max-width:900px;">
+            <div class="responsively-lazy" style="padding-bottom:68.44%;">
+                <img alt="reponsivelyLazy demo image" src="http://ivopetkov.github.io/responsivelyLazy/images/2500.jpg" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                     data-srcset="http://ivopetkov.github.io/responsivelyLazy/images/400.jpg 400w, http://ivopetkov.github.io/responsivelyLazy/images/400.webp 400w, http://ivopetkov.github.io/responsivelyLazy/images/600.jpg 600w, http://ivopetkov.github.io/responsivelyLazy/images/600.webp 600w, http://ivopetkov.github.io/responsivelyLazy/images/800.jpg 800w, http://ivopetkov.github.io/responsivelyLazy/images/800.webp 800w, http://ivopetkov.github.io/responsivelyLazy/images/1000.jpg 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1000.webp 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1500.jpg 1500w, http://ivopetkov.github.io/responsivelyLazy/images/1500.webp 1500w, http://ivopetkov.github.io/responsivelyLazy/images/2000.jpg 2000w, http://ivopetkov.github.io/responsivelyLazy/images/2000.webp 2000w"
+                     />
+            </div>
+        </div>
+        <div class="example-title">width: 100%</div>
+        <div class="example-image">
+            <div class="responsively-lazy" style="padding-bottom:68.44%;">
+                <img alt="reponsivelyLazy demo image" src="http://ivopetkov.github.io/responsivelyLazy/images/2500.jpg" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                     data-srcset="http://ivopetkov.github.io/responsivelyLazy/images/400.jpg 400w, http://ivopetkov.github.io/responsivelyLazy/images/400.webp 400w, http://ivopetkov.github.io/responsivelyLazy/images/600.jpg 600w, http://ivopetkov.github.io/responsivelyLazy/images/600.webp 600w, http://ivopetkov.github.io/responsivelyLazy/images/800.jpg 800w, http://ivopetkov.github.io/responsivelyLazy/images/800.webp 800w, http://ivopetkov.github.io/responsivelyLazy/images/1000.jpg 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1000.webp 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1500.jpg 1500w, http://ivopetkov.github.io/responsivelyLazy/images/1500.webp 1500w, http://ivopetkov.github.io/responsivelyLazy/images/2000.jpg 2000w, http://ivopetkov.github.io/responsivelyLazy/images/2000.webp 2000w"
+                     />
+            </div>
+        </div>
+        <div class="example-title">width: 800px</div>
+        <div class="example-image" style="width:800px;">
+            <div class="responsively-lazy" style="padding-bottom:68.44%;">
+                <img alt="reponsivelyLazy demo image" src="http://ivopetkov.github.io/responsivelyLazy/images/2500.jpg" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                     data-srcset="http://ivopetkov.github.io/responsivelyLazy/images/400.jpg 400w, http://ivopetkov.github.io/responsivelyLazy/images/400.webp 400w, http://ivopetkov.github.io/responsivelyLazy/images/600.jpg 600w, http://ivopetkov.github.io/responsivelyLazy/images/600.webp 600w, http://ivopetkov.github.io/responsivelyLazy/images/800.jpg 800w, http://ivopetkov.github.io/responsivelyLazy/images/800.webp 800w, http://ivopetkov.github.io/responsivelyLazy/images/1000.jpg 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1000.webp 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1500.jpg 1500w, http://ivopetkov.github.io/responsivelyLazy/images/1500.webp 1500w, http://ivopetkov.github.io/responsivelyLazy/images/2000.jpg 2000w, http://ivopetkov.github.io/responsivelyLazy/images/2000.webp 2000w"
+                     />
+            </div>
+        </div>
+
+        <div class="example-title">In scrollable element</div>
+        <div class="example-image" style="overflow:auto;display:flex;">
+            <div style="width:500px;flex:none;padding-right:5px;">
+                <div class="responsively-lazy" style="padding-bottom:68.44%;">
+                    <img alt="reponsivelyLazy demo image" src="http://ivopetkov.github.io/responsivelyLazy/images/2500.jpg" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                         data-srcset="http://ivopetkov.github.io/responsivelyLazy/images/400.jpg 400w, http://ivopetkov.github.io/responsivelyLazy/images/400.webp 400w, http://ivopetkov.github.io/responsivelyLazy/images/600.jpg 600w, http://ivopetkov.github.io/responsivelyLazy/images/600.webp 600w, http://ivopetkov.github.io/responsivelyLazy/images/800.jpg 800w, http://ivopetkov.github.io/responsivelyLazy/images/800.webp 800w, http://ivopetkov.github.io/responsivelyLazy/images/1000.jpg 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1000.webp 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1500.jpg 1500w, http://ivopetkov.github.io/responsivelyLazy/images/1500.webp 1500w, http://ivopetkov.github.io/responsivelyLazy/images/2000.jpg 2000w, http://ivopetkov.github.io/responsivelyLazy/images/2000.webp 2000w"
+                         />
+                </div>
+            </div>
+            <div style="width:500px;flex:none;padding-right:5px;">
+                <div class="responsively-lazy" style="padding-bottom:68.44%;">
+                    <img alt="reponsivelyLazy demo image" src="http://ivopetkov.github.io/responsivelyLazy/images/2500.jpg" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                         data-srcset="http://ivopetkov.github.io/responsivelyLazy/images/400.jpg 400w, http://ivopetkov.github.io/responsivelyLazy/images/400.webp 400w, http://ivopetkov.github.io/responsivelyLazy/images/600.jpg 600w, http://ivopetkov.github.io/responsivelyLazy/images/600.webp 600w, http://ivopetkov.github.io/responsivelyLazy/images/800.jpg 800w, http://ivopetkov.github.io/responsivelyLazy/images/800.webp 800w, http://ivopetkov.github.io/responsivelyLazy/images/1000.jpg 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1000.webp 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1500.jpg 1500w, http://ivopetkov.github.io/responsivelyLazy/images/1500.webp 1500w, http://ivopetkov.github.io/responsivelyLazy/images/2000.jpg 2000w, http://ivopetkov.github.io/responsivelyLazy/images/2000.webp 2000w"
+                         />
+                </div>
+            </div>
+            <div style="width:500px;flex:none;padding-right:5px;">
+                <div class="responsively-lazy" style="padding-bottom:68.44%;">
+                    <img alt="reponsivelyLazy demo image" src="http://ivopetkov.github.io/responsivelyLazy/images/2500.jpg" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                         data-srcset="http://ivopetkov.github.io/responsivelyLazy/images/400.jpg 400w, http://ivopetkov.github.io/responsivelyLazy/images/400.webp 400w, http://ivopetkov.github.io/responsivelyLazy/images/600.jpg 600w, http://ivopetkov.github.io/responsivelyLazy/images/600.webp 600w, http://ivopetkov.github.io/responsivelyLazy/images/800.jpg 800w, http://ivopetkov.github.io/responsivelyLazy/images/800.webp 800w, http://ivopetkov.github.io/responsivelyLazy/images/1000.jpg 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1000.webp 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1500.jpg 1500w, http://ivopetkov.github.io/responsivelyLazy/images/1500.webp 1500w, http://ivopetkov.github.io/responsivelyLazy/images/2000.jpg 2000w, http://ivopetkov.github.io/responsivelyLazy/images/2000.webp 2000w"
+                         />
+                </div>
+            </div>
+        </div>
+
+        <div class="example-title">With onlazyload handler</div>
+        <div class="example-image loading">
+            <div class="responsively-lazy" data-onlazyload="this.parentNode.className+=' loaded';" style="padding-bottom:68.44%;">
+                <img alt="reponsivelyLazy demo image" src="http://ivopetkov.github.io/responsivelyLazy/images/2500.jpg" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                     data-srcset="http://ivopetkov.github.io/responsivelyLazy/images/400.jpg 400w, http://ivopetkov.github.io/responsivelyLazy/images/400.webp 400w, http://ivopetkov.github.io/responsivelyLazy/images/600.jpg 600w, http://ivopetkov.github.io/responsivelyLazy/images/600.webp 600w, http://ivopetkov.github.io/responsivelyLazy/images/800.jpg 800w, http://ivopetkov.github.io/responsivelyLazy/images/800.webp 800w, http://ivopetkov.github.io/responsivelyLazy/images/1000.jpg 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1000.webp 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1500.jpg 1500w, http://ivopetkov.github.io/responsivelyLazy/images/1500.webp 1500w, http://ivopetkov.github.io/responsivelyLazy/images/2000.jpg 2000w, http://ivopetkov.github.io/responsivelyLazy/images/2000.webp 2000w"
+                     />
+            </div>
+        </div>
+
+        <div class="example-title">Hidden (must call responsivelyLazy.run())</div>
+        <div class="example-title"><button onclick="this.parentNode.nextSibling.style.display = 'block';responsivelyLazy.run();">Show image</button></div><div class="example-image" style="display:none;">
+            <div class="responsively-lazy" style="padding-bottom:68.44%;">
+                <img alt="reponsivelyLazy demo image" src="http://ivopetkov.github.io/responsivelyLazy/images/2500.jpg" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                     data-srcset="http://ivopetkov.github.io/responsivelyLazy/images/400.jpg 400w, http://ivopetkov.github.io/responsivelyLazy/images/400.webp 400w, http://ivopetkov.github.io/responsivelyLazy/images/600.jpg 600w, http://ivopetkov.github.io/responsivelyLazy/images/600.webp 600w, http://ivopetkov.github.io/responsivelyLazy/images/800.jpg 800w, http://ivopetkov.github.io/responsivelyLazy/images/800.webp 800w, http://ivopetkov.github.io/responsivelyLazy/images/1000.jpg 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1000.webp 1000w, http://ivopetkov.github.io/responsivelyLazy/images/1500.jpg 1500w, http://ivopetkov.github.io/responsivelyLazy/images/1500.webp 1500w, http://ivopetkov.github.io/responsivelyLazy/images/2000.jpg 2000w, http://ivopetkov.github.io/responsivelyLazy/images/2000.webp 2000w"
+                     />
+            </div>
+        </div>
+
+        <div class="example-title">Lazy (non-image) content</div>
+        <div class="example-image">
+            <script>
+                var executeLazyContentJs = function () {
+                    window.setTimeout(function () {
+                        document.getElementById('lazy-content').firstChild.innerHTML += ' ... that contains JavaScript';
+                    }, 1000);
+                }
+            </script>
+            <div class="responsively-lazy" id="lazy-content" style="padding-bottom:200px;" data-lazycontent="<div style=&quot;background-color:#1380BA;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Arial;font-size:15px;line-height:25px;height:200px;&quot;>Lazy loaded content</div><script>executeLazyContentJs();</script>">
+            </div>
+        </div>
+
+        <div style="max-width:600px; margin:0 auto; text-align:center; font-family: Arial; padding-bottom:60px; padding-top:40px; font-size: 15px;">The demo source is available at:
+            <a style="color:#000;text-decoration:underline;" href="https://github.com/ivopetkov/ivopetkov.github.io/tree/master/responsivelyLazy/">https://github.com/ivopetkov/...</a>
+        </div>
+
+        <script>var responsivelyLazyConfig = {rootMargin: '0px 0px', threshold: 0.8}</script>
+        <script async src="./lib/responsivelyLazy.min.js"></script>
+    </body>
+
+</html>
