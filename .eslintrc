@@ -1,0 +1,28 @@
+{
+    "parser": "babel-eslint",
+    "env": {
+        "browser": true,
+        "amd": true,
+        "es6": true,
+        "node": true
+    },
+    "rules": {
+        "comma-dangle": 1,
+        "quotes": [1, "single"],
+        "no-undef": 2,
+        "global-strict": 0,
+        "indent": [1, 2, {
+            "SwitchCase": 1
+        }],
+        "no-extra-semi": 1,
+        "no-underscore-dangle": 0,
+        "no-console": 1,
+        "no-unused-vars": 1,
+        "no-trailing-spaces": [1, {
+            "skipBlankLines": true
+        }],
+        "no-unreachable": 1,
+        "no-alert": 0,
+        "semi": 1
+    }
+}
