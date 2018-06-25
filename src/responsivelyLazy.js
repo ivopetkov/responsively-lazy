@@ -17,11 +17,11 @@
         // request polyfills, if needed
         (function () {
             const polyFillsNeeded = [];
-            if (MutationObserver === void 0) {
+            if (w.MutationObserver === void 0) {
                 polyFillsNeeded.push('MutationObserver');
             }
     
-            if (IntersectionObserver === void 0) {
+            if (w.IntersectionObserver === void 0) {
                 polyFillsNeeded.push('IntersectionObserver');
             }
     
@@ -109,7 +109,7 @@
                 return (a[1] < b[1]) ? -1 : 1;
             });
     
-            const containerWidth = container.getBoundingClientRect().width * (window.devicePixelRatio !== void 0 ? window.devicePixelRatio : 1);
+            const containerWidth = container.getBoundingClientRect().width * (w.devicePixelRatio !== void 0 ? w.devicePixelRatio : 1);
     
             let bestSelectedOption = null;
             for (let optionData of options) {
@@ -187,12 +187,14 @@
             }
         }
     
-        if (window.addEventListener !== void 0 && d.querySelectorAll !== void 0) {
+        if (w.addEventListener !== void 0 && d.querySelectorAll !== void 0) {
             const image = new Image();
             image.src = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoCAAEADMDOJaQAA3AA/uuuAAA=';
             image.onload = image.onerror = () => {
                 w.responsivelyLazy.hasWebPSupport = hasWebPSupport = image.width === 2;
                 w.responsivelyLazy.hasSrcSetSupport = hasSrcSetSupport = 'srcset' in d.createElement('img');
+
+                let intersectionObserver;
     
                 function updateIntersectionObservers() {
                     d.querySelectorAll('.responsively-lazy')
@@ -210,42 +212,51 @@
                     config.root = d.querySelector(config.root);
                 }
     
-                const intersectionObserver = new IntersectionObserver(entries => {
-                    entries.forEach(entry => {
-                        if (entry.intersectionRatio > 0) {
-                            updateElement(entry.target);
-                        }
-                    });
-                }, config);
+
+                function installIntersectionObserver() {
+                    if (w.IntersectionObserver === void 0) {
+                        setTimeout(installIntersectionObserver, 50);
+                        return;
+                    }
+
+                    intersectionObserver = new IntersectionObserver(entries => {
+                        entries.forEach(entry => {
+                            if (entry.intersectionRatio > 0) {
+                                updateElement(entry.target);
+                            }
+                        });
+                    }, config);
+        
+                    if (config.hasOwnProperty('POLL_INTERVAL')) {
+                        intersectionObserver.POLL_INTERVAL = config.POLL_INTERVAL;
+                    }
+        
+                    if (config.hasOwnProperty('USE_MUTATION_OBSERVER')) {
+                        intersectionObserver.USE_MUTATION_OBSERVER = config.USE_MUTATION_OBSERVER;
+                    }
     
-                if (config.hasOwnProperty('POLL_INTERVAL')) {
-                    intersectionObserver.POLL_INTERVAL = config.POLL_INTERVAL;
-                }
-    
-                if (config.hasOwnProperty('USE_MUTATION_OBSERVER')) {
-                    intersectionObserver.USE_MUTATION_OBSERVER = config.USE_MUTATION_OBSERVER;
-                }
-    
-                function initialize() {
-                    updateIntersectionObservers();
-                    const observer = new MutationObserver(() => {
-                        if (mutationObserverIsDisabled) {
-                            return;
-                        }
+                    function initialize() {
                         updateIntersectionObservers();
-                    });
-                    observer.observe(d.querySelector('body'), {
-                        childList: true,
-                        subtree: true
-                    });
+                        const observer = new MutationObserver(() => {
+                            if (mutationObserverIsDisabled) {
+                                return;
+                            }
+                            updateIntersectionObservers();
+                        });
+                        observer.observe(d.querySelector('body'), {
+                            childList: true,
+                            subtree: true
+                        });
+                    }
+        
+                    if (d.readyState === 'loading') {
+                        d.addEventListener('DOMContentLoaded', initialize);
+                        return;
+                    }
+        
+                    initialize();
                 }
-    
-                if (d.readyState === 'loading') {
-                    d.addEventListener('DOMContentLoaded', initialize);
-                    return;
-                }
-    
-                initialize();
+                installIntersectionObserver();
             };
 
             return {
