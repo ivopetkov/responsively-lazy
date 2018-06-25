@@ -28,7 +28,7 @@
             if (polyFillsNeeded.length) {
                 const polyFillRequest = d.createElement('script');
                 polyFillRequest.async = 1;
-                polyFillRequest.src = `https://polyfill.io/v2/polyfill.min.js?features=${polyFillsNeeded.join('.')}`;
+                polyFillRequest.src = `https://polyfill.io/v2/polyfill.min.js?features=${polyFillsNeeded.join(',')}`;
                 const firstScript = d.getElementsByTagName('script')[0];
                 firstScript.parentNode.insertBefore(polyFillRequest, firstScript);
             }
@@ -43,7 +43,7 @@
                 if (type !== null) {
                     evScript.setAttribute("type", type);
                 }
-                var src = script.getAttribute('src');
+                const src = script.getAttribute('src');
                 if (src !== null) {
                     evScript.setAttribute("src", src);
                     if ((script.async === void 0 || script.async === false) && i + 1 < scripts.length) {
@@ -159,7 +159,7 @@
                 return;
             }
     
-            var lazyContent = element.getAttribute('data-lazycontent');
+            const lazyContent = element.getAttribute('data-lazycontent');
             if (lazyContent !== null) {
                 doneElements.push(element);
                 mutationObserverIsDisabled = true;
