@@ -305,7 +305,7 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
                             setChanged();
                         }
                     });
-                    observer.observe(document.querySelector('body'), {childList: true, subtree: true});
+                    observer.observe(document.querySelector('body'), { childList: true, subtree: true });
                 }
             };
             if (document.readyState === 'loading') {
