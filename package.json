@@ -3,11 +3,11 @@
     "title": "Responsively Lazy",
     "version": "3.0.0",
     "description": "Lazy load responsive images",
-    "homepage": "http://ivopetkov.com/b/lazy-load-responsive-images/",
+    "homepage": "https://ivopetkov.com/responsively-lazy/",
     "author": {
         "name": "Ivo Petkov",
         "email": "ivo@ivopetkov.com",
-        "url": "http://ivopetkov.com/"
+        "url": "https://ivopetkov.com/"
     },
     "repository": {
         "type": "git",
@@ -25,7 +25,7 @@
     "licenses": [
         {
             "type": "MIT",
-            "url": "http://opensource.org/licenses/MIT"
+            "url": "https://opensource.org/licenses/MIT"
         }
     ]
 }
