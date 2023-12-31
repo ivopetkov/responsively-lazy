@@ -18,7 +18,7 @@ You can find a demo at [ivopetkov.github.io/responsively-lazy-v3/](https://ivope
 
 ## Download and install
 
-Download the minified [JS file](https://raw.githubusercontent.com/ivopetkov/responsively-lazy/master/responsively-lazy.min.js) or install via [npm](https://www.npmjs.com/).
+Download the minified [JS file](https://raw.githubusercontent.com/ivopetkov/responsively-lazy/master/responsively-lazy.min.js) or install via [npm](https://www.npmjs.com/package/responsively-lazy).
 ```
 npm install responsively-lazy
 ```
