@@ -7,6 +7,7 @@
 - **SEO friendly** (valid HTML)
 - Supports [WebP](https://en.wikipedia.org/wiki/WebP) and [AVIF](https://en.wikipedia.org/wiki/AVIF)
 - Customizable load threshold
+- Lazy load background images
 - Lazy load HTML
 
 <p align="center">
@@ -33,7 +34,12 @@ The library does not have any dependencies, and it's just 2.5kb when gzipped and
 
 * Add the following code for each image
 ```html
-<img src="images/2500.jpg" style="width:100%;aspect-ratio:400/274;" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-responsively-lazy="images/400.jpg 400w, images/600.jpg 600w, images/800.jpg 800w, images/1000.jpg 1000w" />
+<img
+    src="images/2500.jpg"
+    style="width:100%;aspect-ratio:400/274;"
+    srcset="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+    data-responsively-lazy="images/400.jpg 400w, images/600.jpg 600w, images/800.jpg 800w, images/1000.jpg 1000w"
+/>
 ```
 Values to customize:
 
@@ -65,7 +71,10 @@ data-responsively-lazy-threshold="500px" // can use percents too
 Lazy load HTML. Can contain JavaScript.
 
 ```html
-<div data-responsively-lazy-type="html" data-responsively-lazy="hello world"></div>
+<div
+    data-responsively-lazy-type="html"
+    data-responsively-lazy="hello world"
+></div>
 ```
 
 **data-responsively-lazy-type=background**
@@ -73,7 +82,17 @@ Lazy load HTML. Can contain JavaScript.
 Lazy load image as a background image.
 
 ```html
-<div data-responsively-lazy-type="background" data-responsively-lazy="images/400.jpg 400w, images/600.jpg 600w, images/800.jpg 800w, images/1000.jpg 1000w"></div>
+<div
+    data-responsively-lazy-type="background"
+    data-responsively-lazy="images/400.jpg 400w, images/600.jpg 600w, images/800.jpg 800w, images/1000.jpg 1000w"
+></div>
+```
+
+**data-on-responsively-lazy-load**
+
+Run JavaScript code when the image is loaded.
+```html
+data-on-responsively-lazy-load="..."
 ```
 
 ## A new concept
@@ -89,11 +108,11 @@ Let's not break it when we can enhance it.
 
 ## Browser support
 
-The lazy loading works in browsers supporting the srcset attribute and JavaScript. As of December 2023 that's [97.6%](https://caniuse.com/#feat=srcset). Unsupported browsers will load the image in the src attribute. That's the image search engines and social networks will find, so it's better to make it high resolution.
+The lazy loading works in browsers supporting the srcset attribute and JavaScript. As of December 2023 that's [97.6%](https://caniuse.com/#feat=srcset). Unsupported browsers, search engines and social networks will load the image in the src attribute. Make sure it's high resolution.
 
 ## DOM changes
 
-The library will listen for DOM changes and you can also trigger visible images loading by calling `responsivelyLazy.run()`.
+The library will listen for DOM changes and you can also request loading by calling `responsivelyLazy.run()`.
 
 ## License
 Free to use under the [MIT license](https://opensource.org/licenses/MIT).
