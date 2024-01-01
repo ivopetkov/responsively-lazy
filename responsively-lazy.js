@@ -40,18 +40,21 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
             var elementLeft = rect.left;
             var elementWidth = rect.width;
             var elementHeight = rect.height;
+            if (elementTop === 0 && elementLeft === 0 && elementWidth === 0 && elementHeight === 0) {
+                return 0;
+            }
+            if (elementWidth === 0) {
+                elementWidth = 1;
+            }
+            if (elementHeight === 0) {
+                elementHeight = 1;
+            }
 
-            var getVisiblitySize = function (elementPoint, elementSize, windowSize) {
+            var getVisibleAreaSize = function (elementPoint, elementSize, windowSize) {
                 return elementPoint < windowSize && elementPoint + elementSize > 0 ? Math.min(windowSize, elementPoint + elementSize) - Math.max(0, elementPoint) : 0;
             };
 
-            var percent = (getVisiblitySize(elementLeft, elementWidth, windowWidth) * getVisiblitySize(elementTop, elementHeight, windowHeight)) / (elementWidth * elementHeight) * 100;
-            if (percent === 0) {
-                if (thresholdVertical > 0 || thresholdHorizontal > 0) {
-                    percent = (getVisiblitySize(elementLeft - thresholdHorizontal, elementWidth + 2 * thresholdHorizontal, windowWidth) * getVisiblitySize(elementTop - thresholdVertical, elementHeight + 2 * thresholdVertical, windowHeight)) / ((elementWidth + 2 * thresholdHorizontal) * (elementHeight + 2 * thresholdVertical));
-                }
-            }
-            return percent;
+            return (getVisibleAreaSize(elementLeft - thresholdHorizontal, elementWidth + 2 * thresholdHorizontal, windowWidth) * getVisibleAreaSize(elementTop - thresholdVertical, elementHeight + 2 * thresholdVertical, windowHeight)) / ((elementWidth + 2 * thresholdHorizontal) * (elementHeight + 2 * thresholdVertical)) * 100;
         }
 
         var evalScripts = function (scripts, startIndex) {
@@ -203,8 +206,7 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
                     options = temp;
                 }
             }
-            var preferredOption = element.getAttribute('data-responsively-lazy-preferred-option');
-            var elementWidth = preferredOption !== null ? parseInt(preferredOption) : element.offsetWidth * (typeof window.devicePixelRatio !== 'undefined' ? window.devicePixelRatio : 1);
+            var elementWidth = element.offsetWidth * (typeof window.devicePixelRatio !== 'undefined' ? window.devicePixelRatio : 1);
 
             var bestSelectedOption = null;
             for (var j = 0; j < options.length; j++) {
