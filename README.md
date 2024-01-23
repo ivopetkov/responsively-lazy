@@ -58,6 +58,7 @@ Must contain a list of image versions separated by commas. Each version must con
 ```html
 data-responsively-lazy="images/400.avif 400w avif, images/400.webp 400w webp, images/400.jpg 400w, ..."
 ```
+The paths may be encoded if there are special characters like commas, spaces, etc. Example: https%3A%2F%2Fexample.com%2Fimage.jpg
 
 **data-responsively-lazy-threshold**
 
