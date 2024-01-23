@@ -185,6 +185,9 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
                         if (skipOption) {
                             continue;
                         }
+                        if ((optionImage.indexOf('%2F') !== -1 || optionImage.indexOf('%3F') !== -1) && optionImage.indexOf('/') === -1 && optionImage.indexOf('?') === -1) {// path is encoded
+                            optionImage = decodeURIComponent(optionImage);
+                        }
                         options.push([optionImage, optionWidth]);
                         if (maxOptionWidth < optionWidth) {
                             maxOptionWidth = optionWidth;
