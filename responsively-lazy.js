@@ -94,7 +94,7 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
                 return;
             }
             processLoadImageQueueLock = true;
-            var maxSimultaneousImages = 5;
+            var maxConcurrentImages = 3;
             loadImageQueue = loadImageQueue.filter(function (item) { return item[2] !== 2 }); // Remove completed
             for (var i = 0; i < loadImageQueue.length; i++) { // Update visibility priority
                 loadImageQueue[i][4] = getVisibilityPriority(loadImageQueue[i][1]);
@@ -104,7 +104,7 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
             });
             var currentlyLoadingCount = loadImageQueue.filter(function (item) { return item[3] === 1 }).length;
             for (var i = 0; i < loadImageQueue.length; i++) {
-                if (currentlyLoadingCount >= maxSimultaneousImages) {
+                if (currentlyLoadingCount >= maxConcurrentImages) {
                     break;
                 }
                 var item = loadImageQueue[i];
@@ -209,7 +209,7 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
                     options = temp;
                 }
             }
-            var elementWidth = element.offsetWidth * (typeof window.devicePixelRatio !== 'undefined' ? window.devicePixelRatio : 1);
+            var elementWidth = element.getBoundingClientRect().width * (typeof window.devicePixelRatio !== 'undefined' ? window.devicePixelRatio : 1);
 
             var bestSelectedOption = null;
             for (var j = 0; j < options.length; j++) {
@@ -273,13 +273,15 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
             windowHeight = window.innerHeight;
         };
 
-        var updateElement = function (element) {
+        var updateElement = function (element, options) {
 
             if (typeof element.responsivelyLazyDone !== 'undefined') {
                 return;
             }
 
-            if (getVisibilityPriority(element) === 0) {
+            var ignoreThreshold = typeof options.ignoreThreshold !== 'undefined' ? options.ignoreThreshold : false;
+
+            if (!ignoreThreshold && getVisibilityPriority(element) === 0) {
                 return;
             }
 
@@ -307,24 +309,29 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
 
         };
 
-        var run = function (element) {
+        var run = function (element, options) {
             if (hasWebPSupport === null) {
                 return;
             }
             if (hasAVIFSupport === null) {
                 return;
             }
+            if (typeof options === 'undefined') {
+                options = {};
+            }
             if (debug) {
                 var timerLabel = 'responsivelyLazy::run';
                 console.time(timerLabel);
             }
-            if (typeof element !== 'undefined') {
-                updateElement(elements[i]);
+            if (typeof element !== 'undefined' && element !== null) {
+                if (element.getAttribute('data-responsively-lazy') !== null) {
+                    updateElement(element, options);
+                }
             } else {
                 var elements = document.querySelectorAll('[data-responsively-lazy]');
                 for (var i = 0; i < elements.length; i++) {
                     var element = elements[i];
-                    updateElement(elements[i]);
+                    updateElement(elements[i], options);
                 }
             }
             if (debug) {
@@ -377,7 +384,7 @@ var responsivelyLazy = typeof responsivelyLazy !== 'undefined' ? responsivelyLaz
                 for (var i in entries) {
                     var entry = entries[i];
                     if (entry.intersectionRatio > 0) {
-                        updateElement(entry.target);
+                        updateElement(entry.target, {});
                     }
                 }
             });
