@@ -26,7 +26,10 @@ npm install responsively-lazy
 The library does not have any dependencies, and it's just 2.5kb when gzipped and minified.
 
 ## Usage
-
+* You can add the file through the CDN link in your project
+```html
+  <script async src="https://cdn.jsdelivr.net/npm/responsively-lazy@3.2.1/responsively-lazy.min.js"></script>
+```
 * Include the JS file in the head of the document
 ```html
 <script async src="responsively-lazy.min.js"></script>
